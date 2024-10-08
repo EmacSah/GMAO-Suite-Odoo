@@ -1,0 +1,79 @@
+/* Styles généraux */
+.maintenance-parts-report {
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.maintenance-parts-report h1, 
+.maintenance-parts-report h2, 
+.maintenance-parts-report h3 {
+    color: #2c3e50;
+}
+
+/* Styles pour les tableaux */
+.maintenance-parts-report table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.maintenance-parts-report th, 
+.maintenance-parts-report td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.maintenance-parts-report th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.maintenance-parts-report tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Styles pour les graphiques */
+.maintenance-parts-report .chart-container {
+    margin-bottom: 30px;
+}
+
+/* Styles pour les sections */
+.maintenance-parts-report .section {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+/* Styles pour les KPIs */
+.maintenance-parts-report .kpi {
+    display: inline-block;
+    width: 200px;
+    text-align: center;
+    margin: 10px;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.maintenance-parts-report .kpi-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #3498db;
+}
+
+.maintenance-parts-report .kpi-label {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+/* Styles pour les filtres et groupements */
+.maintenance-parts-report .filters,
+.maintenance-parts-report .grouping {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+}

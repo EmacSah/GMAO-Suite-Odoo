@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_maintenance_team" model="ir.actions.report">
+            <field name="name">Rapport des équipes de maintenance</field>
+            <field name="model">maintenance.team</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">gmao_suite.report_maintenance_team</field>
+            <field name="report_file">gmao_suite.report_maintenance_team</field>
+            <field name="print_report_name">'Rapport des équipes de maintenance - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_maintenance_team"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+        </record>
+
+        <template id="report_maintenance_team">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="team">
+                        <div class="page">
+                            <h2>Rapport de l'équipe de maintenance: <t t-esc="team.name"/></h2>
+                            <div class="row mb32">
+                                <div class="col-3">
+                                    <strong>Chef d'équipe:</strong>
+                                    <p t-field="team.leader_id.name"/>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Nombre de membres:</strong>
+                                    <p t-field="team.total_members"/>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Taux de réussite:</strong>
+                                    <p><t t-esc="'%.2f' % team.success_rate"/>%</p>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Taux d'occupation:</strong>
+                                    <p><t t-esc="'%.2f' % team.occupation_rate"/>%</p>
+                                </div>
+                            </div>
+                            <h3>Membres de l'équipe</h3>
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Fonction</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="team.member_ids" t-as="member">
+                                        <td><span t-field="member.name"/></td>
+                                        <td><span t-field="member.job_title"/></td>
+                                        <td><span t-field="member.work_email"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <h3>Statistiques de l'équipe</h3>
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Métrique</th>
+                                        <th>Valeur</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Demandes ouvertes</td>
+                                        <td><span t-field="team.open_requests_count"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Charge de travail</td>
+                                        <td><span t-field="team.workload"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Taux de réussite</td>
+                                        <td><t t-esc="'%.2f' % team.success_rate"/>%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Taux d'occupation</td>
+                                        <td><t t-esc="'%.2f' % team.occupation_rate"/>%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="mt32 mb32">
+                                <h3>Graphique de performance de l'équipe</h3>
+                                <div style="border: 1px solid #ddd; padding: 10px;">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <img t-att-src="'data:image/png;base64,%s' % team.generate_performance_chart()" style="width: 100%;"/>
+                                        </div>
+                                        <div class="col-4">
+                                            <h4>Légende</h4>
+                                            <ul class="list-unstyled">
+                                                <li><span style="color: #4BC0C0;">&#9679;</span> Taux de réussite</li>
+                                                <li><span style="color: #FF6384;">&#9679;</span> Charge de travail</li>
+                                                <li><span style="color: #36A2EB;">&#9679;</span> Taux d'occupation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

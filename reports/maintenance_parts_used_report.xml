@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_maintenance_parts_used" model="ir.actions.report">
+            <field name="name">Rapport Pièces Utilisées</field>
+            <field name="model">maintenance.parts.used</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">gmao_suite.report_maintenance_parts_used</field>
+            <field name="report_file">gmao_suite.report_maintenance_parts_used</field>
+            <field name="print_report_name">'Rapport Pièces Utilisées - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_maintenance_parts_used"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('gmao_suite.group_parts_used_user')), (4, ref('gmao_suite.group_parts_used_admin'))]"/>
+        </record>
+
+        <record id="action_report_maintenance_parts_used_landscape" model="ir.actions.report">
+            <field name="name">Rapport General de Pièces utilisés</field>
+            <field name="model">maintenance.parts.used</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">gmao_suite.report_maintenance_parts_used_landscape</field>
+            <field name="report_file">gmao_suite.report_maintenance_parts_used_landscape</field>
+            <field name="print_report_name">'Rapport Pièces Utilisées (Paysage) - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_maintenance_parts_used"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="gmao_suite.paperformat_euro_landscape"/>
+            <field name="groups_id" eval="[(4, ref('gmao_suite.group_parts_used_user')), (4, ref('gmao_suite.group_parts_used_admin'))]"/>
+        </record>
+    </data>
+</odoo>

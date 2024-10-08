@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire -->
+    <record id="view_maintenance_site_form" model="ir.ui.view">
+        <field name="name">maintenance.site.form</field>
+        <field name="model">maintenance.site</field>
+        <field name="arch" type="xml">
+            <form string="Site de maintenance">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom du site"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="city_id"/>
+                            <field name="state_id"/>
+                            <field name="country_id"/>
+                        </group>
+                        <group>
+                            <field name="address"/>
+                            <field name="latitude"/>
+                            <field name="longitude"/>
+                            <field name="distance_from_office"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue liste -->
+    <record id="view_maintenance_site_tree" model="ir.ui.view">
+        <field name="name">maintenance.site.tree</field>
+        <field name="model">maintenance.site</field>
+        <field name="arch" type="xml">
+            <tree string="Sites de maintenance">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="city_id"/>
+                <field name="state_id"/>
+                <field name="country_id"/>
+                <field name="distance_from_office"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_maintenance_site_search" model="ir.ui.view">
+        <field name="name">maintenance.site.search</field>
+        <field name="model">maintenance.site</field>
+        <field name="arch" type="xml">
+            <search string="Recherche de sites">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="city_id"/>
+                <field name="state_id"/>
+                <field name="country_id"/>
+                <filter string="Sites actifs" name="active" domain="[('active', '=', True)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Ville" name="group_by_city" context="{'group_by': 'city_id'}"/>
+                    <filter string="État/Région" name="group_by_state" context="{'group_by': 'state_id'}"/>
+                    <filter string="Pays" name="group_by_country" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+ 
+        <!-- Vue de recherche pour le rapport des sites de maintenance -->
+    <record id="view_maintenance_site_report_search" model="ir.ui.view">
+        <field name="name">maintenance.site.report.search</field>
+        <field name="model">maintenance.site</field>
+        <field name="arch" type="xml">
+            <search string="Recherche Sites de Maintenance">
+                <!-- Champs de recherche -->
+                <field name="name"/>
+                <field name="code"/>
+                <field name="city_id"/>
+                <field name="state_id"/>
+                <field name="country_id"/>
+                <!-- Filtre pour les sites actifs -->
+                <filter string="Actif" name="active" domain="[('active', '=', True)]"/>
+                <!-- Options de regroupement -->
+                <group expand="0" string="Group By">
+                    <filter string="Ville" name="group_by_city" context="{'group_by': 'city_id'}"/>
+                    <filter string="État/Région" name="group_by_state" context="{'group_by': 'state_id'}"/>
+                    <filter string="Pays" name="group_by_country" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue de liste pour le rapport des sites de maintenance -->
+    <record id="view_maintenance_site_report_tree" model="ir.ui.view">
+        <field name="name">maintenance.site.report.tree</field>
+        <field name="model">maintenance.site</field>
+        <field name="arch" type="xml">
+            <tree string="Rapport Sites de Maintenance">
+                <!-- Champs à afficher dans la vue liste -->
+                <field name="code"/>
+                <field name="name"/>
+                <field name="city_id"/>
+                <field name="state_id"/>
+                <field name="country_id"/>
+                <field name="latitude"/>
+                <field name="longitude"/>
+                <field name="distance_from_office"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_maintenance_site" model="ir.actions.act_window">
+        <field name="name">Sites de maintenance</field>
+        <field name="res_model">maintenance.site</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Action de fenêtre pour le rapport des sites de maintenance -->
+    <record id="action_maintenance_site_report" model="ir.actions.act_window">
+        <field name="name">Rapport Sites de Maintenance</field>
+        <field name="res_model">maintenance.site</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="view_id" ref="view_maintenance_site_report_tree"/>
+        <field name="search_view_id" ref="view_maintenance_site_report_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun site de maintenance défini
+            </p>
+        </field>
+    </record>
+
+</odoo>

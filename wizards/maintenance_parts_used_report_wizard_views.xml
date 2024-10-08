@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- File: wizards/maintenance_parts_used_report_wizard_views.xml -->
+    <record id="view_maintenance_parts_used_report_wizard" model="ir.ui.view">
+        <field name="name">maintenance.parts.used.report.wizard.form</field>
+        <field name="model">maintenance.parts.used.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Personnaliser le rapport">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="state"/>
+                    </group>
+                    <group>
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="technician_ids" widget="many2many_tags"/>
+                        <field name="groupby"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="generate_report" string="Générer le rapport" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_maintenance_parts_used_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport des pièces utilisées</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">maintenance.parts.used.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>

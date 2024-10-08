@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_users_form_gmao_suite" model="ir.ui.view">
+            <field name="name">res.users.form.gmao.suite</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='access_rights']" position="inside">
+                    <group string="GMAO Suite">
+                        <field name="gmao_admin"/>
+                        <field name="parts_used_profile"/>
+                        <field name="team_profile"/>
+                        <field name="contract_profile"/>
+                        <field name="efficacite_energetique_profile"/>
+                        <field name="equipment_profile"/>
+                        <field name="site_profile"/>
+                        <field name="equipment_category_profile"/>
+						<field name="request_profile"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,105 @@
+/* Styles généraux */
+.maintenance-widget {
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+/* StatusColorWidget */
+.status-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.status-label {
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+/* DynamicPriorityWidget */
+.priority-stars {
+    font-size: 1.2em;
+}
+
+.priority-star {
+    color: #ccc;
+    cursor: pointer;
+}
+
+.priority-star.active {
+    color: #f1c40f;
+}
+
+/* TimerWidget */
+.timer-widget {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.timer-label {
+    margin-right: 5px;
+}
+
+/* RealTimeCostWidget */
+.cost-widget {
+    background-color: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.cost-value {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* StateHistoryWidget */
+.state-history-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.state-history-item {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.state-change {
+    font-weight: bold;
+}
+
+.state-date {
+    font-size: 0.9em;
+    color: #7f8c8d;
+}
+
+/* MaintenanceKPIWidget */
+.kpi-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.kpi-item {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.kpi-label {
+    font-size: 0.9em;
+    color: #34495e;
+}
+
+.kpi-value {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2980b9;
+}

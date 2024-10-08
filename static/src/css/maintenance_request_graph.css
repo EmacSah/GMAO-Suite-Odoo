@@ -1,0 +1,302 @@
+/* maintenance_request_graph.css */
+
+/* Styles généraux pour le conteneur principal */
+.o_maintenance_request_graph {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+/* Styles pour les blocs arrondis */
+.rounded_block {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+/* Styles pour la zone de contrôles */
+.graph_controls {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.graph_controls select,
+.graph_controls button {
+    margin: 5px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #bdc3c7;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.graph_controls button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Icônes pour les boutons (FontAwesome) */
+.o_graph_export_png::before { content: "\f1c5"; font-family: FontAwesome; margin-right: 5px; }
+.o_graph_export::before { content: "\f0ed"; font-family: FontAwesome; margin-right: 5px; }
+.o_graph_zoom_in::before { content: "\f00e"; font-family: FontAwesome; margin-right: 5px; }
+.o_graph_zoom_out::before { content: "\f010"; font-family: FontAwesome; margin-right: 5px; }
+.o_graph_next_page::before { content: "\f054"; font-family: FontAwesome; margin-right: 5px; }
+.o_graph_prev_page::before { content: "\f053"; font-family: FontAwesome; margin-right: 5px; }
+
+/* Styles pour la zone du graphique */
+.graph_area {
+    flex: 2 1 60%;
+    min-height: 400px;
+    position: relative;
+}
+
+/* Styles pour le rendu du graphique */
+.o_graph_renderer {
+    height: 100%;
+    width: 100%;
+}
+
+/* Bords arrondis pour les éléments du graphe */
+.o_maintenance_request_graph .nv-bar {
+    border-radius: 5px;
+}
+
+/* Couleurs personnalisées pour les barres du graphe */
+.o_maintenance_request_graph .nv-bar:nth-child(1) {
+    fill: #3498db;
+}
+
+.o_maintenance_request_graph .nv-bar:nth-child(2) {
+    fill: #e74c3c;
+}
+
+.o_maintenance_request_graph .nv-bar:nth-child(3) {
+    fill: #f1c40f;
+}
+
+.o_maintenance_request_graph .nv-bar:nth-child(4) {
+    fill: #2ecc71;
+}
+
+.o_maintenance_request_graph .nv-bar:nth-child(5) {
+    fill: #9b59b6;
+}
+
+/* Styles pour la légende */
+.o_graph_legend {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255,255,255,0.8);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.o_legend_item {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    margin-bottom: 5px;
+}
+
+.o_legend_color {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+/* Couleurs personnalisées pour les légendes */
+.o_legend_item[data-state="new"] .o_legend_color {
+    background-color: #3498db;
+}
+
+.o_legend_item[data-state="to_validate"] .o_legend_color {
+    background-color: #f1c40f;
+}
+
+.o_legend_item[data-state="in_progress"] .o_legend_color {
+    background-color: #e67e22;
+}
+
+.o_legend_item[data-state="repaired"] .o_legend_color {
+    background-color: #2ecc71;
+}
+
+.o_legend_item[data-state="done"] .o_legend_color {
+    background-color: #27ae60;
+}
+
+.o_legend_item[data-state="cancel"] .o_legend_color {
+    background-color: #e74c3c;
+}
+
+/* Styles pour la zone de détails */
+.graph_details {
+    flex: 1 1 30%;
+}
+
+/* Styles pour les sélecteurs d'axes */
+.o_graph_axis_selectors {
+    margin-bottom: 15px;
+}
+
+.o_graph_x_axis,
+.o_graph_y_axis {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #bdc3c7;
+}
+
+/* Styles pour le tableau de détails */
+.maintenance-details {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+}
+
+.maintenance-details thead {
+    background-color: #34495e;
+}
+
+.maintenance-details th,
+.maintenance-details td {
+    padding: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.maintenance-details th {
+    font-weight: bold;
+    text-align: left;
+    color: #ecf0f1;
+}
+
+.maintenance-details tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Styles pour le tableau paginé */
+.maintenance-data-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.maintenance-data-table th {
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding: 10px;
+    text-align: left;
+}
+
+.maintenance-data-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Alternance des couleurs des lignes */
+.maintenance-data-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Style du tableau lorsqu'un seul graphe est affiché */
+.o_maintenance_request_graph.single-graph .maintenance-data-table {
+    width: 45%;
+    float: right;
+}
+
+/* Réinitialiser le float lorsque plusieurs graphes sont affichés */
+.o_maintenance_request_graph.multiple-graphs .maintenance-data-table {
+    width: 100%;
+    float: none;
+}
+
+/* Styles pour les boutons */
+.btn {
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 12px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+.o_graph_pagination .btn {
+    background-color: #2ecc71;
+}
+
+.o_graph_pagination .btn:hover {
+    background-color: #27ae60;
+}
+
+.o_graph_pagination .btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Styles pour la pagination */
+.o_graph_pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.o_graph_pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+}
+
+/* Flèches de navigation avec FontAwesome */
+.o_graph_pagination .o_graph_prev_page::before { content: "\f053"; font-family: FontAwesome; margin-right: 5px; }
+.o_graph_pagination .o_graph_next_page::before { content: "\f054"; font-family: FontAwesome; margin-right: 5px; }
+
+/* Styles pour les infobulles */
+.nvtooltip {
+    border-radius: 5px !important;
+    padding: 10px !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .o_maintenance_request_graph {
+        flex-direction: column;
+    }
+
+    .graph_area,
+    .graph_details {
+        flex: 1 1 100%;
+    }
+
+    .o_maintenance_request_graph.single-graph .maintenance-data-table {
+        width: 100%;
+        float: none;
+    }
+
+    .o_maintenance_request_graph .o_graph {
+        flex: 1 1 100%;
+    }
+
+    .graph_controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

@@ -1,0 +1,68 @@
+/* Styles pour le conteneur principal du graphique */
+.o_maintenance_team_chart_container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour le graphique */
+.o_maintenance_team_chart {
+    width: 100%;
+    height: 400px;
+    margin-bottom: 20px;
+}
+
+/* Styles pour la légende */
+.o_maintenance_team_chart_legend {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.o_maintenance_team_chart_legend h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.o_maintenance_team_chart_legend ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.o_maintenance_team_chart_legend li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.o_maintenance_team_chart_legend .legend-color {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 3px;
+}
+
+/* Couleurs spécifiques pour chaque type de données */
+.o_maintenance_team_chart_legend .success-rate-color {
+    background-color: rgba(75, 192, 192, 0.6);
+}
+
+.o_maintenance_team_chart_legend .workload-color {
+    background-color: rgba(255, 159, 64, 0.6);
+}
+
+.o_maintenance_team_chart_legend .occupation-rate-color {
+    background-color: rgba(54, 162, 235, 0.6);
+}
+
+/* Style pour les messages d'erreur */
+.o_maintenance_team_chart_error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+}

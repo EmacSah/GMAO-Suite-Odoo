@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Menu principal GMAO -->
+        <menuitem id="menu_gmao_root" name="GMAO Suite" sequence="10" web_icon="gmao_suite,static/description/icon.png"/>
+
+        <!-- Dashboard 
+        <menuitem id="menu_gmao_dashboard" name="Tableau de bord" parent="menu_gmao_root" action="action_maintenance_dashboard" sequence="1"/>
+		-->
+
+        <!-- Opérations -->
+        <menuitem id="menu_gmao_operations" name="Opérations" parent="menu_gmao_root" sequence="10"/>
+
+        <menuitem id="menu_maintenance_request" name="Demandes d'intervention" parent="menu_gmao_operations" action="action_maintenance_request" sequence="11"/>
+        <!--menuitem id="menu_suivi_maintenance" name="Suivi des maintenances" parent="menu_gmao_operations" action="action_suivi_maintenance" sequence="12"/>
+        <menuitem id="menu_maintenance_preventive" name="Maintenance préventive" parent="menu_gmao_operations" action="action_maintenance_preventive" sequence="13"/-->
+		
+		
+
+        <!-- Ressources -->
+        <menuitem id="menu_gmao_resources" name="Ressources" parent="menu_gmao_root" sequence="20"/>
+
+        <menuitem id="menu_maintenance_site" name="Sites" parent="menu_gmao_resources" action="action_maintenance_site" sequence="21"/>
+		<menuitem id="menu_maintenance_equipment_category" name="Catégories d'équipement" parent="menu_gmao_resources" action="action_maintenance_equipment_category" sequence="22"/>
+        <menuitem id="menu_maintenance_equipment" name="Équipements" parent="menu_gmao_resources" action="action_maintenance_equipment" sequence="23"/>
+        <menuitem id="menu_maintenance_team" name="Équipes" parent="menu_gmao_resources" action="action_maintenance_team" sequence="23"/>
+        
+		
+		<menuitem id="menu_maintenance_parts_used" name="Pièces utilisées" parent="menu_gmao_root" action="action_maintenance_parts_used" sequence="24"/>
+		<menuitem id="menu_maintenance_parts_inventory" name="Inventaire des pièces" parent="menu_maintenance_parts_used" action="action_maintenance_parts_used" sequence="71" 
+              groups="gmao_suite.group_parts_used_user,gmao_suite.group_parts_used_admin"/>
+
+		<menuitem id="menu_maintenance_parts_allocation" name="Allocation des pièces" parent="menu_maintenance_parts_used" action="action_maintenance_parts_allocation" sequence="72" 
+              groups="gmao_suite.group_parts_used_user,gmao_suite.group_parts_used_admin"/>
+
+        <!-- Gestion -->
+        <menuitem id="menu_gmao_management" name="Gestion" parent="menu_gmao_root" sequence="30"/>
+
+        <menuitem id="menu_maintenance_contract" name="Contrats" parent="menu_gmao_management" action="action_maintenance_contract" sequence="31"/>
+        <menuitem id="menu_conformite_securite" name="Conformité et sécurité" parent="menu_gmao_management" action="action_conformite_securite" sequence="32"/>
+        <menuitem id="menu_efficacite_energetique" name="Efficacité énergétique" parent="menu_gmao_management" action="action_efficacite_energetique" sequence="33"/>
+        <!--menuitem id="menu_satisfaction_client" name="Satisfaction client" parent="menu_gmao_management" action="action_satisfaction_client" sequence="34"/>
+        <menuitem id="menu_formation_competence" name="Formation et compétences" parent="menu_gmao_management" action="action_formation_competence" sequence="35"/-->
+
+        <!-- Rapports 
+        <menuitem id="menu_gmao_reports" name="Rapports" parent="menu_gmao_root" sequence="40"/>
+
+        <menuitem id="menu_maintenance_request_report" name="Rapport des interventions" parent="menu_gmao_reports" action="action_maintenance_request_report" sequence="41"/>
+        <menuitem id="menu_maintenance_equipment_report" name="Rapport des équipements" parent="menu_gmao_reports" action="action_maintenance_equipment_report" sequence="42"/>
+        <menuitem id="menu_maintenance_team_report" name="Rapport des équipes" parent="menu_gmao_reports" action="action_maintenance_team_report" sequence="43"/-->
+		
+		
+		<!-- Menus pour les rapports -->
+		<menuitem id="menu_gmao_reports" name="Rapports" parent="menu_gmao_root" sequence="100" groups="gmao_suite.group_parts_used_user,gmao_suite.group_parts_used_admin"/>
+	
+		<menuitem id="menu_report_maintenance_parts_used_standard" name="Rapport Standard" parent="menu_gmao_reports" action="action_report_maintenance_parts_used"
+              sequence="102"/>
+
+		<menuitem id="menu_report_maintenance_parts_used_landscape" name="Rapport Graphique" parent="menu_gmao_reports" action="action_report_maintenance_parts_used_landscape"
+              sequence="103"/>
+			  
+		    <!-- Menu item -->
+		<menuitem id="menu_maintenance_parts_used_report" name="Rapport des pièces utilisées" parent="menu_gmao_reports" action="action_maintenance_parts_used_report_wizard" sequence="104"/>	  
+			  	
+	        <!-- Menu item pour accéder au graphique des demandes de maintenance -->
+        <menuitem id="menu_maintenance_request_graph" name="Graphique des demandes de maintenance" parent="menu_gmao_reports" action="action_maintenance_request_graph"
+                sequence="105"/>
+				
+		<menuitem id="menu_maintenance_request_analysis_report" name="Rapport d'analyse des demandes" parent="menu_gmao_reports" action="action_report_maintenance_request_analysis"
+          sequence="120"/>
+	    
+		<menuitem id="menu_report_maintenance_contract_list" name="Rapport d'analyse des contrats" parent="menu_gmao_reports" action="action_report_maintenance_contract_list"
+          sequence="125"/>
+		
+
+
+        <!-- Configuration 
+        <menuitem id="menu_gmao_configuration" name="Configuration" parent="menu_gmao_root" sequence="50"/>
+
+        <menuitem id="menu_sms_gateway_config" name="Configuration SMS" parent="menu_gmao_configuration" action="action_sms_gateway_config" sequence="51"/>
+        <menuitem id="menu_maintenance_delay_cause" name="Causes de retard" parent="menu_gmao_configuration" action="action_maintenance_delay_cause" sequence="52"/>
+		-->
+		
+		
+
+
+		
+		<menuitem id="menu_maintenance_team_groups" name="Équipes de maintenance" parent="menu_gmao_root" action="action_maintenance_team_groups" sequence="200"/>
+		
+		
+		
+    </data>
+</odoo>

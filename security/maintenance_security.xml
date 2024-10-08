@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="module_category_maintenance" model="ir.module.category">
+            <field name="name">GMAO Suite</field>
+            <field name="description">Catégorie pour la gestion de la maintenance</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Groupes pour les pièces utilisées -->
+        <record id="group_parts_used_reader" model="res.groups">
+            <field name="name">Pièces utilisées / Lecteur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+        </record>
+        <record id="group_parts_used_creator" model="res.groups">
+            <field name="name">Pièces utilisées / Créateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('gmao_suite.group_parts_used_reader'))]"/>
+        </record>
+        <record id="group_parts_used_user" model="res.groups">
+            <field name="name">Pièces utilisées / Utilisateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_parts_used_creator'))]"/>
+        </record>
+        <record id="group_parts_used_admin" model="res.groups">
+            <field name="name">Pièces utilisées / Administrateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_parts_used_user'))]"/>
+        </record>
+
+        <!-- Groupes pour les équipes -->
+        <record id="group_maintenance_team_reader" model="res.groups">
+            <field name="name">Équipe / Lecteur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+        </record>
+        <record id="group_maintenance_team_creator" model="res.groups">
+            <field name="name">Équipe / Créateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_team_reader'))]"/>
+        </record>
+        <record id="group_maintenance_team_user" model="res.groups">
+            <field name="name">Équipe / Utilisateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_team_creator'))]"/>
+        </record>
+        <record id="group_maintenance_team_admin" model="res.groups">
+            <field name="name">Équipe / Administrateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_team_user'))]"/>
+        </record>
+
+        <!-- Groupes pour les contrats -->
+        <record id="group_maintenance_contract_reader" model="res.groups">
+            <field name="name">Contrat / Lecteur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+			<field name="implied_ids" eval="[(4, ref('group_maintenance_contract_reader'))]"/>
+        </record>
+        <record id="group_maintenance_contract_creator" model="res.groups">
+            <field name="name">Contrat / Créateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_contract_creator'))]"/>
+        </record>
+        <record id="group_maintenance_contract_user" model="res.groups">
+            <field name="name">Contrat / Utilisateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_contract_user'))]"/>
+        </record>
+        <record id="group_maintenance_contract_admin" model="res.groups">
+            <field name="name">Contrat / Administrateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_contract_admin'))]"/>
+        </record>
+
+        <!-- Groupes pour l'efficacité énergétique -->
+        <record id="group_efficacite_energetique_reader" model="res.groups">
+            <field name="name">Efficacité énergétique / Lecteur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+        </record>
+        <record id="group_efficacite_energetique_creator" model="res.groups">
+            <field name="name">Efficacité énergétique / Créateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_efficacite_energetique_reader'))]"/>
+        </record>
+        <record id="group_efficacite_energetique_user" model="res.groups">
+            <field name="name">Efficacité énergétique / Utilisateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_efficacite_energetique_creator'))]"/>
+        </record>
+        <record id="group_efficacite_energetique_admin" model="res.groups">
+            <field name="name">Efficacité énergétique / Administrateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_efficacite_energetique_user'))]"/>
+        </record>
+
+        <!-- Groupes pour les équipements -->
+        <record id="group_maintenance_equipment_reader" model="res.groups">
+            <field name="name">Équipement / Lecteur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+        </record>
+        <record id="group_maintenance_equipment_creator" model="res.groups">
+            <field name="name">Équipement / Créateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_equipment_reader'))]"/>
+        </record>
+        <record id="group_maintenance_equipment_user" model="res.groups">
+            <field name="name">Équipement / Utilisateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_equipment_creator'))]"/>
+        </record>
+        <record id="group_maintenance_equipment_admin" model="res.groups">
+            <field name="name">Équipement / Administrateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_equipment_user'))]"/>
+        </record>
+
+        <!-- Groupes pour les sites -->
+        <record id="group_maintenance_site_reader" model="res.groups">
+            <field name="name">Site / Lecteur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+        </record>
+        <record id="group_maintenance_site_creator" model="res.groups">
+            <field name="name">Site / Créateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_site_reader'))]"/>
+        </record>
+        <record id="group_maintenance_site_user" model="res.groups">
+            <field name="name">Site / Utilisateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_site_creator'))]"/>
+        </record>
+        <record id="group_maintenance_site_admin" model="res.groups">
+            <field name="name">Site / Administrateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_site_user'))]"/>
+        </record>
+
+        <!-- Groupes pour les catégories d'équipement -->
+        <record id="group_maintenance_equipment_category_reader" model="res.groups">
+            <field name="name">Catégorie d'équipement / Lecteur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+        </record>
+        <record id="group_maintenance_equipment_category_creator" model="res.groups">
+            <field name="name">Catégorie d'équipement / Créateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_equipment_category_reader'))]"/>
+        </record>
+        <record id="group_maintenance_equipment_category_user" model="res.groups">
+            <field name="name">Catégorie d'équipement / Utilisateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_equipment_category_creator'))]"/>
+        </record>
+        <record id="group_maintenance_equipment_category_admin" model="res.groups">
+            <field name="name">Catégorie d'équipement / Administrateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_maintenance_equipment_category_user'))]"/>
+        </record>
+		
+		
+		
+		<!-- Nouveaux groupes pour les demandes de maintenance -->
+        <record id="group_request_reader" model="res.groups">
+            <field name="name">Demande de maintenance / Lecteur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+        </record>
+        <record id="group_request_user" model="res.groups">
+            <field name="name">Demande de maintenance / Utilisateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_request_reader'))]"/>
+        </record>
+        <record id="group_request_admin" model="res.groups">
+            <field name="name">Demande de maintenance / Administrateur</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('group_request_user'))]"/>
+        </record>
+		
+		
+		
+		
+		<!-- Règles de sécurité pour les pièces utilisées -->
+        <record id="rule_maintenance_parts_used_multi_company" model="ir.rule">
+            <field name="name">Pièces utilisées: multi-société</field>
+            <field name="model_id" ref="model_maintenance_parts_used"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <!-- Règles de sécurité pour les équipes -->
+        <record id="rule_maintenance_team_multi_company" model="ir.rule">
+            <field name="name">Équipes: multi-société</field>
+            <field name="model_id" ref="model_maintenance_team"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', user.user.company_ids.ids.ids)]</field>
+        </record>
+		
+		
+
+        <!-- Règles de sécurité pour les contrats -->
+        <record id="rule_maintenance_contract_multi_company" model="ir.rule">
+            <field name="name">Contrats: multi-société</field>
+            <field name="model_id" ref="model_maintenance_contract"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <!-- Règles de sécurité pour l'efficacité énergétique -->
+        <record id="rule_efficacite_energetique_multi_company" model="ir.rule">
+            <field name="name">Efficacité énergétique: multi-société</field>
+            <field name="model_id" ref="model_maintenance_efficacite_energetique"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <!-- Règles de sécurité pour les équipements -->
+        <record id="rule_maintenance_equipment_multi_company" model="ir.rule">
+            <field name="name">Équipements: multi-société</field>
+            <field name="model_id" ref="model_maintenance_equipment"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+		
+		
+		
+		
+
+        <!-- Règles de sécurité pour les sites -->
+        <record id="rule_maintenance_site_multi_company" model="ir.rule">
+            <field name="name">Sites: multi-société</field>
+            <field name="model_id" ref="model_maintenance_site"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <!-- Règles de sécurité pour les catégories d'équipement -->
+        <record id="rule_maintenance_equipment_category_multi_company" model="ir.rule">
+            <field name="name">Catégories d'équipement: multi-société</field>
+            <field name="model_id" ref="model_maintenance_equipment_category"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+		
+		
+		
+		<!-- Nouvelle règle de sécurité pour les demandes de maintenance -->
+        <record id="rule_maintenance_request_multi_company" model="ir.rule">
+            <field name="name">Demandes de maintenance: multi-société</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_maintenance_request_reader" model="ir.rule">
+            <field name="name">Demandes de maintenance: lecteur</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="groups" eval="[(4, ref('group_request_reader'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_maintenance_request_user" model="ir.rule">
+            <field name="name">Demandes de maintenance: utilisateur</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="groups" eval="[(4, ref('group_request_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_maintenance_request_admin" model="ir.rule">
+            <field name="name">Demandes de maintenance: administrateur</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="groups" eval="[(4, ref('group_request_admin'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+		
+    </data>
+</odoo>

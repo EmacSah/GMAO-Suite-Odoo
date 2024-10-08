@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+	
+	
+        <!-- Template pour la notification d'expiration de contrat -->
+        <record id="email_template_contract_expiration" model="mail.template">
+            <field name="name">Notification d'expiration de contrat de maintenance</field>
+            <field name="model_id" ref="model_maintenance_contract"/>
+            <field name="subject">Expiration prochaine du contrat: ${object.name}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+            <field name="email_cc">${object.responsible_id.email_formatted | safe}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Cher ${object.partner_id.name},
+                        <br/><br/>
+                        Nous vous informons que votre contrat de maintenance ${object.name} arrivera à expiration le ${object.end_date}.
+                        <br/><br/>
+                        Détails du contrat :
+                        <ul>
+                            <li>Référence : ${object.name}</li>
+                            <li>Date de début : ${object.start_date}</li>
+                            <li>Date de fin : ${object.end_date}</li>
+                            <li>Jours restants : ${object.remaining_days}</li>
+                        </ul>
+                        <br/>
+                        Veuillez nous contacter pour discuter du renouvellement de votre contrat.
+                        <br/><br/>
+                        Cordialement,
+                        <br/><br/>
+                        <img src="/web/image/res.company/${object.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                        <br/>
+                        ${object.company_id.name}
+                        <br/>
+                        <hr style="width:100%; border-top: 1px solid #000000;"/>
+                        ${object.responsible_id.name}<br/>
+                        ${object.responsible_id.phone or ''}<br/>
+                        ${object.responsible_id.email or ''}
+                    </p>
+                </div>
+            </field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+		
+		        <!-- Template pour la notification de renouvellement de contrat -->
+        <record id="email_template_contract_renewal" model="mail.template">
+            <field name="name">Notification de renouvellement de contrat de maintenance</field>
+            <field name="model_id" ref="model_maintenance_contract"/>
+            <field name="subject">Contrat de maintenance renouvelé: ${object.name}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+            <field name="email_cc">${object.responsible_id.email_formatted | safe}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Cher ${object.partner_id.name},
+                        <br/><br/>
+                        Nous vous informons que votre contrat de maintenance ${object.name} a été renouvelé.
+                        <br/><br/>
+                        Détails du nouveau contrat :
+                        <ul>
+                            <li>Référence : ${object.name}</li>
+                            <li>Date de début : ${object.start_date}</li>
+                            <li>Date de fin : ${object.end_date}</li>
+                            <li>Montant total : ${object.total_amount} ${object.currency_id.name}</li>
+                        </ul>
+                        <br/>
+                        N'hésitez pas à nous contacter si vous avez des questions concernant ce renouvellement.
+                        <br/><br/>
+                        Cordialement,
+                        <br/><br/>
+                        <img src="/web/image/res.company/${object.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                        <br/>
+                        ${object.company_id.name}
+                        <br/>
+                        <hr style="width:100%; border-top: 1px solid #000000;"/>
+                        ${object.responsible_id.name}<br/>
+                        ${object.responsible_id.phone or ''}<br/>
+                        ${object.responsible_id.email or ''}
+                    </p>
+                </div>
+            </field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+		
+		
+		<!-- Template pour la notification de composition d'équipe -->
+        <record id="email_template_team_composition" model="mail.template">
+            <field name="name">Notification de composition d'équipe</field>
+            <field name="model_id" ref="model_maintenance_team"/>
+            <field name="subject">Vous avez été ajouté à l'équipe de maintenance ${object.name}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${object.member_ids.mapped('work_email') | join(', ')}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 14px;">
+                        Bonjour,
+                        <br/><br/>
+                        Vous avez été ajouté à l'équipe de maintenance "${object.name}".
+                        <br/><br/>
+                        Détails de l'équipe :
+                        <ul>
+                            <li>Nom de l'équipe : ${object.name}</li>
+                            <li>Chef d'équipe : ${object.leader_id.name}</li>
+                            <li>Nombre de membres : ${object.total_members}</li>
+                        </ul>
+                        <br/>
+                        Membres de l'équipe :
+                        <ul>
+                        % for member in object.member_ids:
+                            <li>${member.name}</li>
+                        % endfor
+                        </ul>
+                        <br/>
+                        Si vous avez des questions concernant votre rôle ou les responsabilités de l'équipe, n'hésitez pas à contacter votre chef d'équipe.
+                        <br/><br/>
+                        Cordialement,
+                        <br/><br/>
+                        <img src="/web/image/res.company/${object.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                        <br/>
+                        ${object.company_id.name}
+                        <br/>
+                        <hr style="width:100%; border-top: 1px solid #000000;"/>
+                        ${object.create_uid.name}<br/>
+                        ${object.create_uid.phone or ''}<br/>
+                        ${object.create_uid.email or ''}
+                    </p>
+                </div>
+            </field>
+            <field name="lang">${object.member_ids.mapped('user_id.lang')[0]}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template pour la notification de mise à jour d'équipe -->
+        <record id="email_template_team_update" model="mail.template">
+            <field name="name">Notification de mise à jour d'équipe</field>
+            <field name="model_id" ref="model_maintenance_team"/>
+            <field name="subject">Mise à jour de l'équipe de maintenance ${object.name}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${object.leader_id.work_email}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 14px;">
+                        Bonjour ${object.leader_id.name},
+                        <br/><br/>
+                        L'équipe de maintenance "${object.name}" a été mise à jour.
+                        <br/><br/>
+                        Détails de la mise à jour :
+                        <ul>
+                            <li>Nom de l'équipe : ${object.name}</li>
+                            <li>Nouveau nombre de membres : ${object.total_members}</li>
+                        </ul>
+                        <br/>
+                        Nouvelle composition de l'équipe :
+                        <ul>
+                        % for member in object.member_ids:
+                            <li>${member.name}</li>
+                        % endfor
+                        </ul>
+                        <br/>
+                        Veuillez prendre note de ces changements et ajuster la planification des tâches en conséquence.
+                        <br/><br/>
+                        Si vous avez des questions ou des préoccupations concernant ces modifications, n'hésitez pas à contacter le service des ressources humaines ou le responsable de la maintenance.
+                        <br/><br/>
+                        Cordialement,
+                        <br/><br/>
+                        <img src="/web/image/res.company/${object.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                        <br/>
+                        ${object.company_id.name}
+                        <br/>
+                        <hr style="width:100%; border-top: 1px solid #000000;"/>
+                        ${object.write_uid.name}<br/>
+                        ${object.write_uid.phone or ''}<br/>
+                        ${object.write_uid.email or ''}
+                    </p>
+                </div>
+            </field>
+            <field name="lang">${object.leader_id.user_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+		
+		
+		<!-- Nouveau template pour la libération de l'équipe -->
+        <record id="email_template_team_release" model="mail.template">
+            <field name="name">Maintenance Team - Release Notification</field>
+            <field name="model_id" ref="model_maintenance_team"/>
+            <field name="subject">Libération de l'équipe de maintenance : ${object.name}</field>
+            <field name="email_from">${(user.email_formatted) | safe}</field>
+            <field name="email_to">${(', '.join(object.member_ids.mapped('work_email'))) | safe}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Bonjour,
+                        <br/><br/>
+                        L'équipe de maintenance suivante a été libérée :
+                        <br/>
+                        <strong>Nom de l'équipe :</strong> ${object.name}
+                        <br/>
+                        <strong>Chef d'équipe :</strong> ${object.leader_id.name}
+                        <br/>
+                        <strong>Membres :</strong>
+                        <ul>
+                        % for member in object.member_ids:
+                            <li>${member.name}</li>
+                        % endfor
+                        </ul>
+                        <br/>
+                        Toutes les tâches assignées à cette équipe ont été marquées comme terminées.
+						                        <br/><br/>
+                        Cordialement,
+                        <br/><br/>
+                        <img src="/web/image/res.company/${object.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                        <br/>
+                        ${object.company_id.name}
+                        <br/>
+                        <hr style="width:100%; border-top: 1px solid #000000;"/>
+                        ${object.write_uid.name}<br/>
+                        ${object.write_uid.phone or ''}<br/>
+                        ${object.write_uid.email or ''}
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+		
+		
+		<!-- Template pour l'alerte de stock -->
+<record id="email_template_stock_alert" model="mail.template">
+    <field name="name">Alerte de stock - Pièces de maintenance</field>
+    <field name="model_id" ref="model_maintenance_parts_used"/>
+    <field name="subject">Alerte de stock : ${object.product_id.name}</field>
+    <field name="email_from">${user.email_formatted | safe}</field>
+    <field name="email_to">${object.create_uid.email_formatted | safe}</field>
+    <field name="body_html" type="html">
+        <div style="margin: 0px; padding: 0px;">
+            <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                Bonjour,
+                <br/><br/>
+                Le stock de la pièce suivante est en dessous du seuil minimum :
+                <br/><br/>
+                <strong>Pièce :</strong> ${object.product_id.name}<br/>
+                <strong>Stock actuel :</strong> ${object.current_stock}<br/>
+                <strong>Stock minimum :</strong> ${object.min_stock}<br/>
+                <br/>
+                Veuillez prendre les mesures nécessaires pour réapprovisionner cette pièce.
+                <br/><br/>
+                Cordialement,
+                <br/><br/>
+                <img src="/web/image/res.company/${object.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                <br/>
+                ${object.company_id.name}
+                <br/>
+                <hr style="width:100%; border-top: 1px solid #000000;"/>
+                ${user.signature | safe}
+            </p>
+        </div>
+    </field>
+    <field name="lang">${object.create_uid.lang}</field>
+    <field name="auto_delete" eval="True"/>
+</record>
+
+<!-- Template pour la notification d'allocation de pièces -->
+<record id="email_template_parts_allocation" model="mail.template">
+    <field name="name">Notification d'allocation de pièces</field>
+    <field name="model_id" ref="model_maintenance_parts_used"/>
+    <field name="subject">Pièce allouée : ${object.product_id.name} pour l'intervention ${object.intervention_id.name}</field>
+    <field name="email_from">${user.email_formatted | safe}</field>
+    <field name="email_to">${object.technician_id.work_email}</field>
+    <field name="body_html" type="html">
+        <div style="margin: 0px; padding: 0px;">
+            <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                Bonjour ${object.technician_id.name},
+                <br/><br/>
+                La pièce suivante a été allouée pour l'intervention ${object.intervention_id.name} :
+                <br/><br/>
+                <strong>Pièce :</strong> ${object.product_id.name}<br/>
+                <strong>Quantité :</strong> ${object.quantity}<br/>
+                <strong>Emplacement de stock :</strong> ${object.stock_location_id.name}<br/>
+                <br/>
+                Veuillez récupérer cette pièce avant de commencer l'intervention.
+                <br/><br/>
+                Cordialement,
+                <br/><br/>
+                <img src="/web/image/res.company/${object.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                <br/>
+                ${object.company_id.name}
+                <br/>
+                <hr style="width:100%; border-top: 1px solid #000000;"/>
+                ${user.signature | safe}
+            </p>
+        </div>
+    </field>
+    <field name="lang">${object.technician_id.lang}</field>
+    <field name="auto_delete" eval="True"/>
+</record>
+		
+		       <!-- Template pour la notification de nouvelle demande de maintenance -->
+        <record id="email_template_new_maintenance_request" model="mail.template">
+            <field name="name">Nouvelle demande de maintenance</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="subject">Nouvelle demande de maintenance : ${object.name}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${object.user_id.email_formatted | safe}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Bonjour,
+                        <br/><br/>
+                        Une nouvelle demande de maintenance a été créée :
+                        <br/><br/>
+                        Référence : ${object.name}
+                        <br/>
+                        Équipement : ${object.equipment_id.name}
+                        <br/>
+                        Description : ${object.description}
+                        <br/>
+                        Priorité : ${object.priority}
+                        <br/>
+                        Date prévue : ${object.schedule_date}
+                        <br/><br/>
+                        Vous pouvez consulter les détails de cette demande en cliquant sur le lien suivant :
+                        <a href="/web#id=${object.id}&amp;model=maintenance.request&amp;view_type=form" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                            Voir la demande
+                        </a>
+                        <br/><br/>
+                        Cordialement,
+                        <br/><br/>
+                        <img src="/web/image/res.company/${object.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                        <br/>
+                        ${object.company_id.name}
+                        <br/>
+                        <hr style="width:100%; border-top: 1px solid #000000;"/>
+                        ${object.env.ref('gmao_suite.group_request_admin').users[0].name}<br/>
+                        ${object.env.ref('gmao_suite.group_request_admin').users[0].phone or ''}<br/>
+                        ${object.env.ref('gmao_suite.group_request_admin').users[0].email or ''}
+                    </p>
+                </div>
+            </field>
+            <field name="lang">${object.user_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template pour le rapport hebdomadaire -->
+        <record id="email_template_weekly_report" model="mail.template">
+            <field name="name">Rapport hebdomadaire de maintenance</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="subject">Rapport hebdomadaire de maintenance</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${user.company_id.email}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Bonjour,
+                        <br/><br/>
+                        Voici le rapport hebdomadaire des demandes de maintenance :
+                        <br/><br/>
+                        Nombre total de demandes : ${len(context.get('requests', []))}
+                        <br/><br/>
+                        Détails des demandes :
+                        <br/>
+                        % for request in context.get('requests', []):
+                            <br/>
+                            Référence : ${request.name}
+                            <br/>
+                            Équipement : ${request.equipment_id.name}
+                            <br/>
+                            État : ${request.state}
+                            <br/>
+                        % endfor
+                        <br/><br/>
+                        Cordialement,
+                        <br/><br/>
+                        <img src="/web/image/res.company/${user.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                        <br/>
+                        ${user.company_id.name}
+                        <br/>
+                        <hr style="width:100%; border-top: 1px solid #000000;"/>
+                        ${user.env.ref('gmao_suite.group_request_admin').users[0].name}<br/>
+                        ${user.env.ref('gmao_suite.group_request_admin').users[0].phone or ''}<br/>
+                        ${user.env.ref('gmao_suite.group_request_admin').users[0].email or ''}
+                    </p>
+                </div>
+            </field>
+            <field name="lang">${user.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template pour la notification de retard -->
+        <record id="email_template_late_request_notification" model="mail.template">
+            <field name="name">Notification de demande de maintenance en retard</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="subject">Demande de maintenance en retard : ${object.name}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${object.user_id.email_formatted | safe}, ${object.technician_id.work_email | safe}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Bonjour,
+                        <br/><br/>
+                        La demande de maintenance suivante est en retard :
+                        <br/><br/>
+                        Référence : ${object.name}
+                        <br/>
+                        Équipement : ${object.equipment_id.name}
+                        <br/>
+                        Date prévue : ${object.schedule_date}
+                        <br/><br/>
+                        Veuillez prendre les mesures nécessaires pour traiter cette demande dès que possible.
+                        <br/><br/>
+                        Cordialement,
+                        <br/><br/>
+                        <img src="/web/image/res.company/${object.company_id.id}/logo/250x250" style="width:250px; height:250px;"/>
+                        <br/>
+                        ${object.company_id.name}
+                        <br/>
+                        <hr style="width:100%; border-top: 1px solid #000000;"/>
+                        ${object.env.ref('gmao_suite.group_request_admin').users[0].name}<br/>
+                        ${object.env.ref('gmao_suite.group_request_admin').users[0].phone or ''}<br/>
+                        ${object.env.ref('gmao_suite.group_request_admin').users[0].email or ''}
+                    </p>
+                </div>
+            </field>
+            <field name="lang">${object.user_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+		
+		
+<record id="email_template_maintenance_request_state_change" model="mail.template">
+    <field name="name">Notification de changement d'état de la demande de maintenance</field>
+    <field name="model_id" ref="model_maintenance_request"/>
+    <field name="subject">Changement d'état de la demande : ${object.name}</field>
+    <field name="email_from">${user.email_formatted | safe}</field>
+    <field name="body_html" type="html">
+        <div style="margin: 0px; padding: 0px;">
+            <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                Bonjour,
+                <br/><br/>
+                La demande de maintenance ${object.name} est passée à l'état : ${ctx.get('new_state')}
+                <br/><br/>
+                Détails de la demande :
+                <ul>
+                    <li>Équipement : ${object.equipment_id.name}</li>
+                    <li>Description : ${object.description}</li>
+                    <li>Priorité : ${object.priority}</li>
+                </ul>
+                <br/>
+                Cordialement,
+                <br/>
+                L'équipe de maintenance
+            </p>
+        </div>
+    </field>
+    <field name="lang">${object.user_id.lang}</field>
+    <field name="auto_delete" eval="True"/>
+</record>
+		
+    </data>
+</odoo>

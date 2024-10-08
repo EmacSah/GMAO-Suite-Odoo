@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_maintenance_contract_renew_wizard_form" model="ir.ui.view">
+        <field name="name">maintenance.contract.renew.wizard.form</field>
+        <field name="model">maintenance.contract.renew.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Renouveler le contrat de maintenance">
+                <group>
+                    <field name="contract_id" readonly="1"/>
+                    <field name="new_start_date"/>
+                    <field name="new_end_date"/>
+                    <field name="new_total_amount"/>
+                </group>
+                <footer>
+                    <button name="action_renew_contract" string="Renouveler" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_maintenance_contract_renew_wizard" model="ir.actions.act_window">
+        <field name="name">Renouveler le contrat</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">maintenance.contract.renew.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

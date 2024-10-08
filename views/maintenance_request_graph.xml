@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Vue graphique personnalisée pour les demandes de maintenance -->
+        <record id="view_maintenance_request_graph" model="ir.ui.view">
+            <field name="name">maintenance.request.graph</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <graph string="Analyse des demandes de maintenance" js_class="maintenance_request_graph">
+                    <!-- Champs disponibles pour le graphique -->
+                    <!-- Dimensions -->
+                    <field name="state"/>
+                    <field name="maintenance_type"/>
+                    <field name="system"/>
+                    <field name="equipment_id"/>
+                    <field name="category_id"/>
+                    <field name="site_id"/>
+                    <field name="technician_id"/>
+                    <field name="priority"/>
+                    <!-- Mesures -->
+                    <field name="duration" type="measure"/>
+                    <field name="total_cost" type="measure"/>
+                    <field name="downtime" type="measure"/>
+                    <field name="mttr" type="measure"/>
+                    <field name="mtbf" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Vue de recherche associée à la vue graphique -->
+        <record id="view_maintenance_request_graph_search" model="ir.ui.view">
+            <field name="name">maintenance.request.graph.search</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <search>
+                    <!-- Filtres -->
+                    <field name="state"/>
+                    <field name="maintenance_type"/>
+                    <field name="system"/>
+                    <field name="equipment_id"/>
+                    <field name="category_id"/>
+                    <field name="site_id"/>
+                    <field name="technician_id"/>
+                    <field name="priority"/>
+                    <!-- Filtres personnalisés -->
+                    <filter string="Non annulées" name="not_cancelled" domain="[('state', '!=', 'cancel')]"/>
+                    <!-- Group By -->
+                    <group expand="0" string="Group By">
+                        <filter string="État" name="group_by_state" context="{'group_by':'state'}"/>
+                        <filter string="Type de maintenance" name="group_by_maintenance_type" context="{'group_by':'maintenance_type'}"/>
+                        <filter string="Technicien" name="group_by_technician" context="{'group_by':'technician_id'}"/>
+                        <filter string="Site" name="group_by_site" context="{'group_by':'site_id'}"/>
+                        <filter string="Catégorie" name="group_by_category" context="{'group_by':'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action pour afficher la vue graphique personnalisée -->
+        <record id="action_maintenance_request_graph" model="ir.actions.act_window">
+            <field name="name">Graphique des demandes de maintenance</field>
+            <field name="res_model">maintenance.request</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_maintenance_request_graph"/>
+            <field name="search_view_id" ref="view_maintenance_request_graph_search"/>
+            <field name="context">
+                {
+                    'graph_measure': 'total_cost',
+                    'graph_groupbys': ['state'],
+                    'search_default_not_cancelled': 1
+                }
+            </field>
+            <field name="domain">[('state', '!=', 'cancel')]</field>
+        </record>
+
+
+    </data>
+</odoo>

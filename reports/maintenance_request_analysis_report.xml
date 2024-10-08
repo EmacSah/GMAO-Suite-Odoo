@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_report_maintenance_request_analysis" model="ir.actions.report">
+            <field name="name">Rapport d'analyse des demandes de maintenance</field>
+            <field name="model">maintenance.request</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">gmao_suite.report_maintenance_request_analysis_template</field>
+            <field name="report_file">gmao_suite.report_maintenance_request_analysis</field>
+            <field name="print_report_name">'Analyse des demandes de maintenance - %s' % (datetime.now().strftime('%Y-%m-%d'))</field>
+            <field name="binding_model_id" ref="model_maintenance_request"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="gmao_suite.paperformat_euro_landscape"/>
+        </record>
+
+        <template id="report_maintenance_request_analysis_template">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-set="docs" t-value="docs.with_context(lang=lang)"/>
+                    <t t-set="report_data" t-value="{
+                        'interventions_evolution': docs._get_graph_data_line(),
+                        'intervention_time': docs._get_graph_data_bar(),
+                        'avg_time_by_team_priority': docs.get_pivot_data(),
+                        'cost_distribution': docs._get_graph_data_pie()
+                    }"/>
+                    <div class="page" style="font-family: Arial, sans-serif;">
+                        <!-- En-tête du rapport -->
+                        <h1 style="text-align: center;">Rapport d'analyse des demandes de maintenance</h1>
+                        <div style="text-align: right; margin-bottom: 20px;">
+                            <p>Date: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/></p>
+                            <p>Utilisateur: <span t-esc="env.user.name"/></p>
+                        </div>
+
+                        <!-- Conteneur principal en 3 colonnes -->
+                        <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+                            <!-- Colonne 1 -->
+                            <div style="width: 32%;">
+                                <!-- Graphique 1 -->
+                                <div class="graph-container" style="margin-bottom: 20px;">
+                                    <h3 style="text-align: center;">Évolution du nombre d'interventions</h3>
+                                    <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px;">
+                                        <canvas id="interventionsEvolutionChart" style="width: 100%; height: 200px;"/>
+                                    </div>
+                                    <div class="legend" style="text-align: center; margin-top: 10px;"/>
+                                    <div class="notes" style="margin-top: 10px;">
+                                        <strong>Analyse :</strong>
+                                        <p>Analyse de l'évolution des interventions...</p>
+                                    </div>
+                                </div>
+
+                                <!-- Graphique 2 -->
+                                <div class="graph-container">
+                                    <h3 style="text-align: center;">Temps d'intervention</h3>
+                                    <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px;">
+                                        <canvas id="interventionTimeChart" style="width: 100%; height: 200px;"/>
+                                    </div>
+                                    <div class="legend" style="text-align: center; margin-top: 10px;"/>
+                                    <div class="notes" style="margin-top: 10px;">
+                                        <strong>Analyse :</strong>
+                                        <p>Analyse des temps d'intervention...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Colonne 2 -->
+                            <div style="width: 32%;">
+                                <!-- Graphique 3 -->
+                                <div class="graph-container" style="margin-bottom: 20px;">
+                                    <h3 style="text-align: center;">Temps moyen d'intervention par équipe/priorité</h3>
+                                    <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px;">
+                                        <canvas id="avgTimeByTeamPriorityChart" style="width: 100%; height: 200px;"/>
+                                    </div>
+                                    <div class="legend" style="text-align: center; margin-top: 10px;"/>
+                                    <div class="notes" style="margin-top: 10px;">
+                                        <strong>Analyse :</strong>
+                                        <p>Analyse des temps moyens par équipe et priorité...</p>
+                                    </div>
+                                </div>
+
+                                <!-- Graphique 4 -->
+                                <div class="graph-container">
+                                    <h3 style="text-align: center;">Répartition des coûts</h3>
+                                    <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px;">
+                                        <canvas id="costDistributionChart" style="width: 100%; height: 200px;"/>
+                                    </div>
+                                    <div class="legend" style="text-align: center; margin-top: 10px;"/>
+                                    <div class="notes" style="margin-top: 10px;">
+                                        <strong>Analyse :</strong>
+                                        <p>Analyse de la répartition des coûts...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Colonne 3 -->
+                            <div style="width: 32%;">
+                                <h3 style="text-align: center;">Observations générales</h3>
+                                <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; height: 90%;">
+                                    <p>Observations générales sur les demandes de maintenance...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script id="report_data" type="application/json">
+                        <t t-esc="json.dumps(report_data)"/>
+                    </script>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_maintenance_request_analysis_assets" inherit_id="web.report_assets_common">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/web/static/lib/chart/Chart.js"/>
+                <script type="text/javascript" src="/gmao_suite/static/src/js/maintenance_request_analysis_report.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

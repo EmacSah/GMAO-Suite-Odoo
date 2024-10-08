@@ -1,0 +1,117 @@
+/* Styles pour les états des pièces */
+.state-draft {
+    color: #7c7bad; /* Bleu clair pour l'état brouillon */
+}
+.state-reserved {
+    color: #f0ad4e; /* Orange pour l'état réservé */
+}
+.state-used {
+    color: #5cb85c; /* Vert pour l'état utilisé */
+}
+.state-cancelled {
+    color: #d9534f; /* Rouge pour l'état annulé */
+}
+
+/* Style pour le stock faible */
+.low-stock {
+    color: #d9534f; /* Rouge */
+    font-weight: bold;
+}
+
+/* Style pour la date de retrait dépassée */
+.overdue-withdrawal {
+    color: #d9534f; /* Rouge */
+    font-style: italic;
+}
+
+/* Styles pour les graphiques */
+.maintenance-parts-used-chart {
+    height: 400px; /* Hauteur fixe pour le graphique */
+}
+
+/* Styles pour la légende des graphiques */
+.maintenance-parts-used-legend {
+    margin-top: 20px;
+}
+
+.maintenance-parts-used-legend-item {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.maintenance-parts-used-legend-color {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+/* Style pour mettre en évidence les champs importants */
+.field-highlight {
+    background-color: #f0f0f0; /* Gris clair */
+    padding: 5px;
+    border-radius: 3px;
+}
+
+/* Style pour le message "Aucune donnée à afficher" */
+.no-data {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+    margin-top: 20px;
+}
+
+/* Styles pour le bouton de personnalisation du graphique */
+.customize-graph {
+    margin-bottom: 10px;
+}
+
+/* Styles pour le tooltip personnalisé */
+.graph-tooltip {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 5px;
+    font-size: 12px;
+    max-width: 300px;
+}
+
+.graph-tooltip p {
+    margin: 5px 0;
+}
+
+.graph-tooltip strong {
+    font-weight: bold;
+}
+
+/* Styles pour le formulaire de personnalisation du graphique */
+.graph-customize-form {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.graph-customize-form select {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Styles pour améliorer la lisibilité des graphiques */
+.nv-series text, .nv-axis text {
+    font-size: 12px;
+}
+
+.nvd3 .nv-axis line, .nvd3 .nv-axis path {
+    stroke: #e5e5e5;
+}
+
+/* Styles pour le survol des éléments du graphique */
+.nvd3 .nv-groups .nv-point:hover,
+.nvd3 .nv-groups .nv-bar:hover,
+.nvd3 .nv-groups .nv-slice:hover {
+    fill-opacity: 0.8;
+    stroke-width: 2px;
+}

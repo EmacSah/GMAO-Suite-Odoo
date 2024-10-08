@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire -->
+    <record id="view_conformite_securite_form" model="ir.ui.view">
+        <field name="name">maintenance.conformite.securite.form</field>
+        <field name="model">maintenance.conformite.securite</field>
+        <field name="arch" type="xml">
+            <form string="Inspection de Conformité et Sécurité">
+                <header>
+                    <button name="action_confirm" string="Confirmer" type="object" states="draft" class="oe_highlight"/>
+                    <button name="action_done" string="Terminer" type="object" states="confirmed" class="oe_highlight"/>
+                    <button name="action_cancel" string="Annuler" type="object" states="draft,confirmed"/>
+                    <button name="action_draft" string="Remettre en brouillon" type="object" states="cancelled"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category"/>
+                            <field name="equipment_id" attrs="{'invisible': [('category', '!=', 'equipment')], 'required': [('category', '=', 'equipment')]}" options="{'no_create': True, 'no_create_edit': True}" domain="[('active', '=', True)]"/>
+                            <field name="inspection_object" attrs="{'invisible': [('category', '!=', 'other')], 'required': [('category', '=', 'other')]}"/>
+                            <field name="inspection_date"/>
+                        </group>
+                        <group>
+                            <field name="inspector_id"/>
+                            <field name="result"/>
+                            <field name="next_inspection_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Observations">
+                            <field name="observations"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue liste -->
+    <record id="view_conformite_securite_tree" model="ir.ui.view">
+        <field name="name">maintenance.conformite.securite.tree</field>
+        <field name="model">maintenance.conformite.securite</field>
+        <field name="arch" type="xml">
+            <tree string="Inspections de Conformité et Sécurité" decoration-danger="result=='non_conforme'" decoration-warning="result=='action_requise'" decoration-success="result=='conforme'">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="equipment_id"/>
+                <field name="inspection_object"/>
+                <field name="inspection_date"/>
+                <field name="result"/>
+                <field name="next_inspection_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_conformite_securite_search" model="ir.ui.view">
+        <field name="name">maintenance.conformite.securite.search</field>
+        <field name="model">maintenance.conformite.securite</field>
+        <field name="arch" type="xml">
+            <search string="Recherche d'inspections">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="equipment_id"/>
+                <field name="inspection_object"/>
+                <field name="inspector_id"/>
+                <filter string="Non Conforme" name="non_conforme" domain="[('result', '=', 'non_conforme')]"/>
+                <filter string="Action Requise" name="action_requise" domain="[('result', '=', 'action_requise')]"/>
+                <filter string="Conforme" name="conforme" domain="[('result', '=', 'conforme')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Catégorie" name="group_by_category" context="{'group_by': 'category'}"/>
+                    <filter string="Équipement" name="group_by_equipment" context="{'group_by': 'equipment_id'}"/>
+                    <filter string="Résultat" name="group_by_result" context="{'group_by': 'result'}"/>
+                    <filter string="État" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+        <!-- Vue de recherche pour le rapport de conformité et sécurité -->
+    <record id="view_conformite_securite_report_search" model="ir.ui.view">
+        <field name="name">conformite.securite.report.search</field>
+        <field name="model">maintenance.conformite.securite</field>
+        <field name="arch" type="xml">
+            <search string="Recherche Rapport Conformité et Sécurité">
+                <!-- Champs de recherche -->
+                <field name="equipment_id"/>
+                <field name="inspection_date"/>
+                <field name="result"/>
+                <!-- Filtres prédéfinis -->
+                <filter string="Ce mois" name="this_month" domain="[('inspection_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('inspection_date', '&lt;', (context_today() + relativedelta(months=1, day=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Cette année" name="this_year" domain="[('inspection_date', '&gt;=', (context_today() + relativedelta(month=1, day=1)).strftime('%Y-%m-%d')), ('inspection_date', '&lt;', (context_today() + relativedelta(years=1, month=1, day=1)).strftime('%Y-%m-%d'))]"/>
+                <!-- Options de regroupement -->
+                <group expand="0" string="Group By">
+                    <filter string="Équipement" name="group_by_equipment" context="{'group_by': 'equipment_id'}"/>
+                    <filter string="Résultat" name="group_by_result" context="{'group_by': 'result'}"/>
+                    <filter string="Mois" name="group_by_month" context="{'group_by': 'inspection_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue de liste pour le rapport de conformité et sécurité -->
+    <record id="view_conformite_securite_report_tree" model="ir.ui.view">
+        <field name="name">conformite.securite.report.tree</field>
+        <field name="model">maintenance.conformite.securite</field>
+        <field name="arch" type="xml">
+            <tree string="Rapport Conformité et Sécurité">
+                <!-- Champs à afficher dans la vue liste -->
+                <field name="name"/>
+                <field name="equipment_id"/>
+                <field name="inspection_date"/>
+                <field name="result"/>
+                <field name="inspector_id"/>
+                <field name="next_inspection_date"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="action_conformite_securite" model="ir.actions.act_window">
+        <field name="name">Conformité et Sécurité</field>
+        <field name="res_model">maintenance.conformite.securite</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+    </record>
+
+    <!-- Action de fenêtre pour le rapport de conformité et sécurité -->
+    <record id="action_conformite_securite_report" model="ir.actions.act_window">
+        <field name="name">Rapport Conformité et Sécurité</field>
+        <field name="res_model">maintenance.conformite.securite</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="view_id" ref="view_conformite_securite_report_tree"/>
+        <field name="search_view_id" ref="view_conformite_securite_report_search"/>
+        <field name="context">{'search_default_this_month': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune donnée de conformité et sécurité disponible
+            </p>
+        </field>
+    </record>
+
+
+
+</odoo>

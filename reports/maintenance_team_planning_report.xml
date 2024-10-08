@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_maintenance_team_planning" model="ir.actions.report">
+            <field name="name">Planning des équipes de maintenance</field>
+            <field name="model">maintenance.team</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">gmao_suite.report_maintenance_team_planning</field>
+            <field name="report_file">gmao_suite.report_maintenance_team_planning</field>
+            <field name="print_report_name">'Planning des équipes de maintenance - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_maintenance_team"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+        </record>
+
+        <template id="report_maintenance_team_planning">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="team">
+                        <div class="page">
+                            <h2>Planning de l'équipe de maintenance: <t t-esc="team.name"/></h2>
+                            <div class="row mb32">
+                                <div class="col-3">
+                                    <strong>Chef d'équipe:</strong>
+                                    <p t-field="team.leader_id.name"/>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Nombre de membres:</strong>
+                                    <p t-field="team.total_members"/>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Taux d'occupation:</strong>
+                                    <p><t t-esc="'%.2f' % team.occupation_rate"/>%</p>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Période:</strong>
+                                    <p><t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/> - <t t-esc="(context_timestamp(datetime.datetime.now()) + relativedelta(days=30)).strftime('%d/%m/%Y')"/></p>
+                                </div>
+                            </div>
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Date prévue</th>
+                                        <th>Équipement</th>
+                                        <th>Type de maintenance</th>
+                                        <th>Statut</th>
+                                        <th>Durée estimée</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total_duration" t-value="0"/>
+                                    <t t-foreach="team.request_ids.filtered(lambda r: r.schedule_date and r.schedule_date &gt;= context_timestamp(datetime.datetime.now()).date() and r.schedule_date &lt;= (context_timestamp(datetime.datetime.now()) + relativedelta(days=30)).date()).sorted(key=lambda r: r.schedule_date)" t-as="request">
+                                        <tr>
+                                            <td><span t-field="request.schedule_date"/></td>
+                                            <td><span t-field="request.equipment_id.name"/></td>
+                                            <td><span t-field="request.maintenance_type"/></td>
+                                            <td><span t-field="request.state"/></td>
+                                            <td><span t-field="request.duration"/> heures</td>
+                                        </tr>
+                                        <t t-set="total_duration" t-value="total_duration + request.duration"/>
+                                    </t>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4"><strong>Total des heures planifiées</strong></td>
+                                        <td><strong><t t-esc="'%.2f' % total_duration"/> heures</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

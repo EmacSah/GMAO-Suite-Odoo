@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire pour l'enregistrement des pièces -->
+    <record id="view_maintenance_parts_used_form" model="ir.ui.view">
+        <field name="name">maintenance.parts.used.form</field>
+        <field name="model">maintenance.parts.used</field>
+        <field name="arch" type="xml">
+            <form string="Pièce de maintenance">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,reserved,used,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="unit_price"/>
+                            <field name="total_price"/>
+                            <field name="real_cost"/>
+                        </group>
+                        <group>
+                            <field name="stock_location_id"/>
+                            <field name="current_stock"/>
+                            <field name="min_stock"/>
+                            <field name="forecast_demand"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Informations supplémentaires">
+                            <group>
+                                <field name="serial_number"/>
+                                <field name="notes"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour l'allocation des pièces -->
+    <record id="view_maintenance_parts_allocation_form" model="ir.ui.view">
+        <field name="name">maintenance.parts.allocation.form</field>
+        <field name="model">maintenance.parts.used</field>
+        <field name="arch" type="xml">
+            <form string="Allocation de pièce">
+                <header>
+                    <button name="action_reserve" string="Réserver" type="object" states="draft" class="oe_highlight"/>
+                    <button name="action_use" string="Utiliser" type="object" states="reserved" class="oe_highlight"/>
+                    <button name="action_cancel" string="Annuler" type="object" states="draft,reserved"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,reserved,used,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="intervention_id"/>
+                            <field name="technician_id"/>
+                        </group>
+                        <group>
+                            <field name="usage_date"/>
+                            <field name="withdrawal_date"/>
+                            <field name="stock_location_id"/>
+                            <field name="current_stock"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue liste commune pour les pièces -->
+    <record id="view_maintenance_parts_used_tree" model="ir.ui.view">
+        <field name="name">maintenance.parts.used.tree</field>
+        <field name="model">maintenance.parts.used</field>
+        <field name="arch" type="xml">
+            <tree string="Pièces de maintenance" decoration-info="state == 'draft'" decoration-warning="state == 'reserved'" decoration-success="state == 'used'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="current_stock"/>
+                <field name="withdrawal_date"/>
+                <field name="technician_id"/>
+                <field name="intervention_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue de recherche -->
+    <record id="view_maintenance_parts_used_search" model="ir.ui.view">
+        <field name="name">maintenance.parts.used.search</field>
+        <field name="model">maintenance.parts.used</field>
+        <field name="arch" type="xml">
+            <search string="Recherche de pièces">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="intervention_id"/>
+                <field name="technician_id"/>
+                <field name="withdrawal_date"/>
+                <field name="real_cost"/>
+                <filter string="Stock faible" name="low_stock" domain="[('current_stock', '&lt;', 'min_stock')]"/>
+                <filter string="Utilisées" name="used" domain="[('state', '=', 'used')]"/>
+                <filter string="Réservées" name="reserved" domain="[('state', '=', 'reserved')]"/>
+                <filter string="Date de retrait" name="withdrawal_date_filter" date="withdrawal_date"/>
+                <group expand="0" string="Group By">
+                    <filter string="État" name="groupby_state" context="{'group_by': 'state'}"/>
+                    <filter string="Produit" name="groupby_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Technicien" name="groupby_technician" context="{'group_by': 'technician_id'}"/>
+                    <filter string="Intervention" name="groupby_intervention" context="{'group_by': 'intervention_id'}"/>
+                    <filter string="Mois de retrait" name="groupby_withdrawal_month" context="{'group_by': 'withdrawal_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue graphique -->
+    <record id="view_maintenance_parts_used_graph" model="ir.ui.view">
+        <field name="name">maintenance.parts.used.graph</field>
+        <field name="model">maintenance.parts.used</field>
+        <field name="arch" type="xml">
+            <graph string="Analyse des pièces utilisées" type="bar" js_class="maintenance_parts_used_graph">
+                <field name="product_id"/>
+                <field name="quantity" type="measure"/>
+                <field name="real_cost" type="measure"/>
+                <field name="technician_id"/>
+                <field name="intervention_id"/>
+                <field name="withdrawal_date"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Vue pivot -->
+    <record id="view_maintenance_parts_used_pivot" model="ir.ui.view">
+        <field name="name">maintenance.parts.used.pivot</field>
+        <field name="model">maintenance.parts.used</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse des pièces utilisées">
+                <field name="product_id" type="row"/>
+                <field name="quantity" type="measure"/>
+                <field name="total_price" type="measure"/>
+                <field name="real_cost" type="measure"/>
+                <field name="current_stock" type="measure"/>
+                <field name="technician_id" type="col"/>
+                <field name="intervention_id" type="col"/>
+                <field name="withdrawal_date" type="col"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_maintenance_parts_used" model="ir.actions.act_window">
+        <field name="name">Pièces de maintenance</field>
+        <field name="res_model">maintenance.parts.used</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
+        <field name="view_id" ref="view_maintenance_parts_used_tree"/>
+        <field name="search_view_id" ref="view_maintenance_parts_used_search"/>
+        <field name="domain">[('intervention_id', '=', False)]</field>
+        <field name="context">{'default_state': 'draft'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre première pièce de maintenance
+            </p>
+        </field>
+    </record>
+
+    <record id="action_maintenance_parts_allocation" model="ir.actions.act_window">
+        <field name="name">Allocation de pièces</field>
+        <field name="res_model">maintenance.parts.used</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
+        <field name="view_id" ref="view_maintenance_parts_used_tree"/>
+        <field name="search_view_id" ref="view_maintenance_parts_used_search"/>
+        <field name="domain">[('intervention_id', '!=', False)]</field>
+        <field name="context">{'default_state': 'draft'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Allouer votre première pièce à une intervention
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

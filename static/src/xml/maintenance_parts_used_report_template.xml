@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_maintenance_parts_used_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2>Rapport des pièces utilisées en maintenance</h2>
+				
+                <!-- Filtres -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h4>Filtres</h4>
+                        <t t-if="filters">
+                            <ul>
+                                <li t-if="filters.get('date_from')">
+                                    Date de début: <t t-esc="filters['date_from']"/>
+                                </li>
+                                <li t-if="filters.get('date_to')">
+                                    Date de fin: <t t-esc="filters['date_to']"/>
+                                </li>
+                                <li t-if="filters.get('product_ids')">
+                                    Produits: <t t-esc="', '.join(filters['product_ids'].mapped('name'))"/>
+                                </li>
+                                <li t-if="filters.get('technician_ids')">
+                                    Techniciens: <t t-esc="', '.join(filters['technician_ids'].mapped('name'))"/>
+                                </li>
+                                <li t-if="filters.get('state')">
+                                    État: <t t-esc="filters['state']"/>
+                                </li>
+                            </ul>
+                        </t>
+                        <t t-else="">
+                            <p>Aucun filtre appliqué</p>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- Groupes -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h4>Groupement</h4>
+                        <p>
+                            Groupé par: 
+                            <t t-if="groupby">
+                                <t t-esc="groupby"/>
+                            </t>
+                            <t t-else="">
+                                Aucun groupement
+                            </t>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Statistiques générales -->
+                <div class="row mt32 mb32">
+                    <t t-set="stats" t-value="get_statistics(docs)"/>
+                    <div class="col-3">
+                        <strong>Coût total:</strong>
+                        <p t-esc="stats['total_cost']" t-options='{"widget": "monetary", "display_currency": docs[0].currency_id}'/>
+                    </div>
+                    <div class="col-3">
+                        <strong>Quantité moyenne:</strong>
+                        <p t-esc="stats['avg_quantity']" t-options='{"precision": 2}'/>
+                    </div>
+                    <div class="col-3">
+                        <strong>Interventions:</strong>
+                        <p t-esc="stats['total_interventions']"/>
+                    </div>
+                    <div class="col-3">
+                        <strong>Rotation des stocks:</strong>
+                        <p t-esc="stats['stock_rotation']" t-options='{"precision": 2}'/>
+                    </div>
+                </div>
+
+                <!-- Graphiques -->
+                <div class="row mt32 mb32">
+                    <t t-set="graphs" t-value="get_graphs(docs)"/>
+                    <div class="col-4">
+                        <img t-att-src="'data:image/png;base64,%s' % graphs['quantities_used']" style="width: 100%;"/>
+                    </div>
+                    <div class="col-4">
+                        <img t-att-src="'data:image/png;base64,%s' % graphs['cost_distribution']" style="width: 100%;"/>
+                    </div>
+                    <div class="col-4">
+                        <img t-att-src="'data:image/png;base64,%s' % graphs['usage_evolution']" style="width: 100%;"/>
+                    </div>
+                </div>
+
+                <!-- Tableau des pièces utilisées -->
+                <h3>Détail des pièces utilisées</h3>
+                <table class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th>Référence</th>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>État</th>
+                            <th>Intervention</th>
+                            <th>Technicien</th>
+                            <th>Date de retrait</th>
+                            <th>Coût réel</th>
+                            <th>Stock minimum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="docs" t-as="doc">
+                            <tr>
+                                <td><span t-field="doc.name"/></td>
+                                <td><span t-field="doc.product_id.name"/></td>
+                                <td>
+                                    <span t-field="doc.quantity" t-attf-style="color: #{get_usage_status_color(doc.quantity, stats['avg_quantity'])}"/>
+                                </td>
+                                <td><span t-field="doc.state"/></td>
+                                <td><span t-field="doc.intervention_id.name"/></td>
+                                <td><span t-field="doc.technician_id.name"/></td>
+                                <td><span t-field="doc.withdrawal_date"/></td>
+                                <td>
+                                    <span t-field="doc.real_cost" t-attf-style="color: #{get_cost_status_color(doc.real_cost, stats['total_cost']/len(docs))}"/>
+                                </td>
+                                <td>
+                                    <span t-field="doc.min_stock" t-attf-style="color: #{get_stock_status_color(doc.product_id.qty_available, doc.min_stock)}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <!-- Prévisions de ravitaillement -->
+                <h3>Prévisions de ravitaillement</h3>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Stock actuel</th>
+                            <th>Stock minimum</th>
+                            <th>Utilisation moyenne</th>
+                            <th>Jours avant rupture</th>
+                            <th>Commande recommandée</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="get_replenishment_forecast(docs)" t-as="forecast">
+                            <tr>
+                                <td><t t-esc="forecast['product']"/></td>
+                                <td><t t-esc="forecast['current_stock']"/></td>
+                                <td><t t-esc="forecast['min_stock']"/></td>
+                                <td><t t-esc="forecast['avg_usage']" t-options='{"precision": 2}'/></td>
+                                <td><t t-esc="forecast['days_to_stockout']" t-options='{"precision": 0}'/></td>
+                                <td><t t-esc="forecast['recommended_order']" t-options='{"precision": 0}'/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <!-- Top 5 des pièces les plus utilisées -->
+                <h3>Top 5 des pièces les plus utilisées</h3>
+                <div class="row">
+                    <div class="col-6">
+                        <h4>Par quantité</h4>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Quantité</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="get_top_used_parts(docs)['by_quantity']" t-as="part">
+                                    <tr>
+                                        <td><t t-esc="part[0].name"/></td>
+                                        <td><t t-esc="part[1]['quantity']"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <h4>Par coût</h4>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Coût</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="get_top_used_parts(docs)['by_cost']" t-as="part">
+                                    <tr>
+                                        <td><t t-esc="part[0].name"/></td>
+                                        <td><t t-esc="part[1]['cost']" t-options='{"widget": "monetary", "display_currency": docs[0].currency_id}'/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Efficacité des techniciens -->
+                <h3>Efficacité des techniciens</h3>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Technicien</th>
+                            <th>Interventions réalisées</th>
+                            <th>Temps moyen d'intervention</th>
+                            <th>Coût total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="get_technician_efficiency(docs)" t-as="efficiency">
+                            <tr>
+                                <td><t t-esc="efficiency['technician']"/></td>
+                                <td><t t-esc="efficiency['interventions']"/></td>
+                                <td><t t-esc="efficiency['avg_time']"/></td>
+                                <td><t t-esc="efficiency['total_cost']" t-options='{"widget": "monetary", "display_currency": docs[0].currency_id}'/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>

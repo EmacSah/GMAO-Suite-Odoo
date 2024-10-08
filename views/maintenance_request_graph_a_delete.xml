@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_maintenance_request_graph" model="ir.ui.view">
+        <field name="name">maintenance.request.graph</field>
+        <field name="model">maintenance.request</field>
+        <field name="arch" type="xml">
+            <graph js_class="maintenance_request_graph" string="Maintenance Requests">
+                <field name="state" type="row"/>
+                <field name="create_date" interval="month" type="col"/>
+                <field name="duration" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_maintenance_request_form_inherit_graph" model="ir.ui.view">
+        <field name="name">maintenance.request.form.inherit.graph</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <div class="o_maintenance_request_graph">
+                    <div class="graph_controls rounded_block">
+                        <select class="o_chart_type_selector">
+                            <option value="bar">Bar Chart</option>
+                            <option value="line">Line Chart</option>
+                            <option value="pie">Pie Chart</option>
+                        </select>
+                        <button string="Export PNG" class="btn btn-secondary o_graph_export_png"/>
+                        <button string="Export PDF" class="btn btn-secondary o_graph_export_pdf"/>
+                        <button string="Export CSV" class="btn btn-secondary o_graph_export"/>
+                        <button string="Zoom +" class="btn btn-secondary o_graph_zoom_in"/>
+                        <button string="Zoom -" class="btn btn-secondary o_graph_zoom_out"/>
+                    </div>
+                    <div class="graph_area rounded_block">
+                        <div class="o_graph_renderer"/>
+                        <div class="o_graph_legend"/>
+                    </div>
+                    <div class="graph_details rounded_block">
+                        <div class="o_graph_axis_selectors">
+                            <div class="o_graph_x_axis"/>
+                            <div class="o_graph_y_axis"/>
+                        </div>
+                        <table class="table table-sm maintenance-details">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody/>
+                        </table>
+                        <div class="o_graph_pagination">
+                            <button class="prev" disabled="disabled">Previous</button>
+                            <button class="next">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_maintenance_request_graph" model="ir.actions.act_window">
+        <field name="name">Maintenance Requests Graph</field>
+        <field name="res_model">maintenance.request</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_maintenance_request_graph"/>
+    </record>
+
+    <menuitem id="menu_maintenance_request_graph"
+              name="Maintenance Requests Graph"
+              parent="maintenance.menu_maintenance_title"
+              action="action_maintenance_request_graph"
+              sequence="20"/>
+</odoo>

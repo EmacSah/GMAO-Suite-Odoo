@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="StatusColorWidget">
+        <div class="status-color-widget">
+            <span t-attf-class="status-dot" t-attf-style="background-color: #{color};"/>
+            <span class="status-label"><t t-esc="status"/></span>
+        </div>
+    </t>
+
+    <t t-name="DynamicPriorityWidget">
+        <div class="dynamic-priority-widget">
+            <t t-foreach="[1, 2, 3, 4]" t-as="star">
+                <i t-attf-class="fa fa-star priority-star #{star &lt;= priority ? 'active' : ''}"
+                    t-att-data-priority="star"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="TimerWidget">
+        <div class="timer-widget">
+            <span class="timer-label">Durée :</span>
+            <span class="timer-value"><t t-esc="duration"/></span>
+        </div>
+    </t>
+
+    <t t-name="RealTimeCostWidget">
+        <div class="cost-widget">
+            <span class="cost-label">Coût total :</span>
+            <span class="cost-value"><t t-esc="totalCost"/> €</span>
+        </div>
+    </t>
+
+    <t t-name="StateHistoryWidget">
+        <div class="state-history-widget">
+            <h4>Historique des états</h4>
+            <ul class="state-history-list">
+                <t t-foreach="history" t-as="change">
+                    <li class="state-history-item">
+                        <span class="state-change">
+                            <t t-esc="change.old_state"/> → <t t-esc="change.new_state"/>
+                        </span>
+                        <br/>
+                        <span class="state-date">
+                            <t t-esc="change.change_date"/> par <t t-esc="change.user_id[1]"/>
+                        </span>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="MaintenanceKPIWidget">
+        <div class="kpi-container">
+            <div class="kpi-item">
+                <div class="kpi-label">MTTR</div>
+                <div class="kpi-value"><t t-esc="kpis.mttr.toFixed(2)"/> h</div>
+            </div>
+            <div class="kpi-item">
+                <div class="kpi-label">MTBF</div>
+                <div class="kpi-value"><t t-esc="kpis.mtbf.toFixed(2)"/> h</div>
+            </div>
+            <div class="kpi-item">
+                <div class="kpi-label">Temps d'arrêt</div>
+                <div class="kpi-value"><t t-esc="kpis.downtime.toFixed(2)"/> h</div>
+            </div>
+            <div class="kpi-item">
+                <div class="kpi-label">Coût total</div>
+                <div class="kpi-value"><t t-esc="kpis.total_cost.toFixed(2)"/> €</div>
+            </div>
+        </div>
+    </t>
+
+</templates>

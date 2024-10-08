@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="MaintenanceTeamChartTemplate">
+        <div class="o_maintenance_team_chart_container">
+            <canvas class="o_maintenance_team_chart"></canvas>
+            <div class="o_maintenance_team_chart_legend">
+                <h4>Légende</h4>
+                <ul>
+                    <li><span class="legend-color success-rate-color"></span>Taux de réussite : Pourcentage des interventions réussies</li>
+                    <li><span class="legend-color workload-color"></span>Charge de travail : Nombre d'interventions en cours</li>
+                    <li><span class="legend-color occupation-rate-color"></span>Taux d'occupation : Pourcentage du temps de travail utilisé</li>
+                </ul>
+            </div>
+        </div>
+    </t>
+</templates>

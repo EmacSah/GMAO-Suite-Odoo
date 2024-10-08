@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire pour maintenance.request -->
+        <record id="view_maintenance_request_form" model="ir.ui.view">
+            <field name="name">maintenance.request.form</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <form string="Demande de maintenance">
+                    <header>
+                        <button name="action_validate" string="Valider" type="object" states="new" groups="gmao_suite.group_request_user,gmao_suite.group_request_admin" class="oe_highlight"/>
+                        <button name="action_start" string="Démarrer" type="object" states="to_validate" groups="gmao_suite.group_request_user,gmao_suite.group_request_admin" class="oe_highlight"/>
+                        <button name="action_repair" string="Marquer comme réparé" type="object" states="in_progress" groups="gmao_suite.group_request_user,gmao_suite.group_request_admin" class="oe_highlight"/>
+                        <button name="action_done" string="Terminer" type="object" states="repaired" groups="gmao_suite.group_request_user,gmao_suite.group_request_admin" class="oe_highlight"/>
+                        <button name="action_cancel" string="Annuler" type="object" states="new,to_validate,in_progress,repaired" groups="gmao_suite.group_request_user,gmao_suite.group_request_admin"/>
+                        <button name="action_reset_to_draft" string="Réinitialiser" type="object" states="cancel" groups="gmao_suite.group_gmao_admin"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new,to_validate,in_progress,repaired,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" icon="fa-clock-o" name="get_current_duration" type="object">
+                                <field name="duration" widget="statinfo" string="Durée"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archivé" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="request_number"/>
+                                <field name="user_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="equipment_id" options="{'no_create': True}"/>
+                                <field name="category_id" readonly="1"/>
+                                <field name="site_id" readonly="1"/>
+                                <field name="maintenance_type" widget="radio"/>
+                                <field name="priority" widget="priority"/>
+                                <field name="system"/>
+                            </group>
+                            <group>
+                                <field name="request_date"/>
+                                <field name="schedule_date"/>
+                                <field name="start_date" readonly="1"/>
+                                <field name="close_date" readonly="1"/>
+                                <field name="technician_id" options="{'no_create': True}"/>
+                                <field name="team_id" options="{'no_create': True}"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="active" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description" placeholder="Décrivez le problème ou la tâche de maintenance..."/>
+                                <field name="observations" placeholder="Observations supplémentaires..."/>
+                            </page>
+                            <page string="Pièces et Coûts">
+                                <group>
+                                    <group string="Pièces utilisées">
+                                        <field name="parts_used_ids" nolabel="1">
+                                            <tree editable="bottom">
+                                                <field name="product_id"/>
+                                                <field name="quantity"/>
+                                                <field name="unit_price"/>
+                                                <field name="total_price" sum="Total"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                    <group string="Coûts">
+                                        <field name="hourly_rate"/>
+                                        <field name="total_parts_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        <field name="labor_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        <field name="total_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        <field name="devis" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Contrat et KPI">
+                                <group>
+                                    <group string="Contrat">
+                                        <field name="contract_id" options="{'no_create': True}"/>
+                                    </group>
+                                    <group string="KPI">
+                                        <field name="downtime" widget="float_time"/>
+                                        <field name="mttr"/>
+                                        <field name="mtbf"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Historique des états">
+                                <field name="state_history_ids" readonly="1">
+                                    <tree>
+                                        <field name="change_date"/>
+                                        <field name="old_state"/>
+                                        <field name="new_state"/>
+                                        <field name="user_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Documents">
+                                <field name="document_ids" widget="many2many_binary"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue liste (tree) -->
+        <record id="view_maintenance_request_tree" model="ir.ui.view">
+            <field name="name">maintenance.request.tree</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <tree string="Demandes de maintenance" decoration-info="state == 'new'" decoration-warning="state == 'in_progress'" decoration-success="state in ('repaired','done')" decoration-danger="state == 'cancel'" decoration-muted="state == 'to_validate'">
+                    <field name="name"/>
+                    <field name="request_number"/>
+                    <field name="equipment_id"/>
+                    <field name="user_id"/>
+                    <field name="request_date"/>
+                    <field name="schedule_date"/>
+                    <field name="state" widget="statusbar"/>
+                    <field name="priority" widget="priority"/>
+                    <field name="maintenance_type"/>
+                    <field name="system"/>
+                    <field name="duration" sum="Total Duration"/>
+                    <field name="total_cost" sum="Total Cost"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue de recherche -->
+        <record id="view_maintenance_request_search" model="ir.ui.view">
+            <field name="name">maintenance.request.search</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <search string="Recherche de demandes de maintenance">
+                    <field name="name"/>
+                    <field name="request_number"/>
+                    <field name="equipment_id"/>
+                    <field name="user_id"/>
+                    <field name="technician_id"/>
+                    <field name="team_id"/>
+                    <field name="system"/>
+                    <field name="contract_id"/>
+                    <field name="priority"/>
+                    <field name="maintenance_type"/>
+                    <field name="state"/>
+                    <field name="site_id"/>
+                    <field name="category_id"/>
+                    <separator/>
+                    <filter string="Mes demandes" name="my_requests" domain="[('user_id', '=', uid)]"/>
+                    <filter string="À valider" name="to_validate" domain="[('state', '=', 'to_validate')]"/>
+                    <filter string="En cours" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                    <filter string="À planifier" name="to_schedule" domain="[('schedule_date', '=', False), ('state', 'not in', ['done', 'cancel'])]"/>
+                    <filter string="Avec contrat" name="with_contract" domain="[('contract_id', '!=', False)]"/>
+                    <filter string="Archivé" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="État" name="groupby_state" context="{'group_by': 'state'}"/>
+                        <filter string="Équipement" name="groupby_equipment" context="{'group_by': 'equipment_id'}"/>
+                        <filter string="Type de maintenance" name="groupby_type" context="{'group_by': 'maintenance_type'}"/>
+                        <filter string="Système" name="groupby_system" context="{'group_by': 'system'}"/>
+                        <filter string="Technicien" name="groupby_technician" context="{'group_by': 'technician_id'}"/>
+                        <filter string="Site" name="groupby_site" context="{'group_by': 'site_id'}"/>
+                        <filter string="Catégorie" name="groupby_category" context="{'group_by': 'category_id'}"/>
+                        <filter string="Mois de demande" name="groupby_month" context="{'group_by': 'request_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Vue graphique -->
+        <record id="view_maintenance_request_graph" model="ir.ui.view">
+            <field name="name">maintenance.request.graph</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <graph string="Analyse des demandes de maintenance">
+                    <!-- Dimensions disponibles pour l'analyse -->
+                    <field name="state"/>
+                    <field name="maintenance_type"/>
+                    <field name="system"/>
+                    <field name="equipment_id"/>
+                    <field name="category_id"/>
+                    <field name="site_id"/>
+                    <field name="technician_id"/>
+                    <field name="priority"/>
+                    <!-- Mesures disponibles pour l'analyse -->
+                    <field name="duration" type="measure"/>
+                    <field name="total_cost" type="measure"/>
+                    <field name="downtime" type="measure"/>
+                    <field name="mttr" type="measure"/>
+                    <field name="mtbf" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Vue pivot -->
+        <record id="view_maintenance_request_pivot" model="ir.ui.view">
+            <field name="name">maintenance.request.pivot</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <pivot string="Analyse des demandes de maintenance">
+                    <field name="state" type="row"/>
+                    <field name="maintenance_type" type="col"/>
+                    <field name="system" type="col"/>
+                    <field name="equipment_id" type="col"/>
+                    <field name="category_id" type="col"/>
+                    <field name="site_id" type="col"/>
+                    <field name="technician_id" type="col"/>
+                    <field name="priority" type="col"/>
+                    <field name="duration" type="measure"/>
+                    <field name="total_cost" type="measure"/>
+                    <field name="downtime" type="measure"/>
+                    <field name="mttr" type="measure"/>
+                    <field name="mtbf" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Vue Kanban -->
+        <record id="view_maintenance_request_kanban" model="ir.ui.view">
+            <field name="name">maintenance.request.kanban</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column" create="0">
+                    <field name="name"/>
+                    <field name="equipment_id"/>
+                    <field name="user_id"/>
+                    <field name="priority"/>
+                    <field name="state"/>
+                    <field name="maintenance_type"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                        </div>
+                                        <field name="priority" widget="priority"/>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <field name="equipment_id"/>
+                                        <field name="user_id"/>
+                                        <field name="maintenance_type"/>
+                                        <field name="system"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="state" widget="statusbar"/>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="duration" widget="float_time"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action pour la vue des demandes de maintenance -->
+        <record id="action_maintenance_request" model="ir.actions.act_window">
+            <field name="name">Demandes de maintenance</field>
+            <field name="res_model">maintenance.request</field>
+            <field name="view_mode">kanban,tree,form,pivot,graph</field>
+            <field name="search_view_id" ref="view_maintenance_request_search"/>
+            <field name="context">{'search_default_my_requests': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Créez votre première demande de maintenance
+                </p>
+            </field>
+        </record>
+
+ 
+    </data>
+</odoo>

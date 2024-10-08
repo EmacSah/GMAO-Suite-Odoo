@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Séquence pour les demandes de maintenance -->
+        <record id="seq_maintenance_request" model="ir.sequence">
+            <field name="name">Séquence des demandes de maintenance</field>
+            <field name="code">maintenance.request</field>
+            <field name="prefix">MAINT/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Séquence pour les équipements -->
+        <record id="seq_maintenance_equipment" model="ir.sequence">
+            <field name="name">Séquence des équipements</field>
+            <field name="code">maintenance.equipment</field>
+            <field name="prefix">EQP/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_maintenance_conformite_securite" model="ir.sequence">
+            <field name="name">Séquence de conformité et sécurité</field>
+            <field name="code">maintenance.conformite.securite</field>
+            <field name="prefix">CS/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_maintenance_efficacite_energetique" model="ir.sequence">
+            <field name="name">Séquence d'efficacité énergétique</field>
+            <field name="code">maintenance.efficacite.energetique</field>
+            <field name="prefix">EE/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_maintenance_parts_used" model="ir.sequence">
+            <field name="name">Séquence des pièces utilisées</field>
+            <field name="code">maintenance.parts.used</field>
+            <field name="prefix">MPU/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

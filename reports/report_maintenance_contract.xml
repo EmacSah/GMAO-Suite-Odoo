@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_maintenance_contract_document">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+            <div class="page">
+                <h2>Contrat de Maintenance</h2>
+                <div class="row mt32 mb32">
+                    <div class="col-3">
+                        <strong>Référence:</strong>
+                        <p t-field="doc.name"/>
+                    </div>
+                    <div class="col-3">
+                        <strong>Client:</strong>
+                        <p t-field="doc.partner_id"/>
+                    </div>
+                    <div class="col-3">
+                        <strong>Date de début:</strong>
+                        <p t-field="doc.start_date"/>
+                    </div>
+                    <div class="col-3">
+                        <strong>Date de fin:</strong>
+                        <p t-field="doc.end_date"/>
+                    </div>
+                </div>
+
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Type de contrat</th>
+                            <th>Montant total</th>
+                            <th>Montant mensuel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span t-field="doc.type"/></td>
+                            <td><span t-field="doc.total_amount"/></td>
+                            <td><span t-field="doc.monthly_amount"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Équipements couverts</h3>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Catégorie</th>
+                            <th>Numéro de série</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="doc.equipment_ids" t-as="equipment">
+                            <tr>
+                                <td><span t-field="equipment.name"/></td>
+                                <td><span t-field="equipment.category_id"/></td>
+                                <td><span t-field="equipment.serial_no"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <div class="row mt32 mb32">
+                    <div class="col-12">
+                        <strong>Notes:</strong>
+                        <p t-field="doc.note"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_maintenance_contract">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="gmao_suite.report_maintenance_contract_document" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_maintenance_contract" model="ir.actions.report">
+        <field name="name">Contrat de Maintenance</field>
+        <field name="model">maintenance.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">gmao_suite.report_maintenance_contract</field>
+        <field name="report_file">gmao_suite.report_maintenance_contract</field>
+        <field name="print_report_name">'Contrat de Maintenance - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_maintenance_contract"/>
+        <field name="binding_type">report</field>
+    </record>
+	
+	<template id="report_maintenance_contracts_list">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Liste des Contrats de Maintenance</h2>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Date de début</th>
+                                <th>Date de fin</th>
+                                <th>Montant total</th>
+                                <th>État</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="contract">
+                                <tr>
+                                    <td><span t-field="contract.name"/></td>
+                                    <td><span t-field="contract.partner_id.name"/></td>
+                                    <td><span t-field="contract.type"/></td>
+                                    <td><span t-field="contract.start_date"/></td>
+                                    <td><span t-field="contract.end_date"/></td>
+                                    <td><span t-field="contract.total_amount"/></td>
+                                    <td><span t-field="contract.state"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_maintenance_contract_list" model="ir.actions.report">
+        <field name="name">Liste des Contrats de Maintenance</field>
+        <field name="model">maintenance.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">gmao_suite.report_maintenance_contracts_list</field>
+        <field name="report_file">gmao_suite.report_maintenance_contracts_list</field>
+        <field name="print_report_name">'Liste des Contrats de Maintenance'</field>
+        <field name="binding_model_id" ref="model_maintenance_contract"/>
+        <field name="binding_type">report</field>
+    </record>
+	
+	
+</odoo>

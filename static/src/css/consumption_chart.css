@@ -1,0 +1,78 @@
+.o_consumption_chart_widget {
+    width: 100%;
+    height: 400px;
+    margin-bottom: 20px;
+}
+
+.o_consumption_chart_widget canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.o_consumption_chart_widget .chart-container {
+    position: relative;
+    margin: auto;
+    height: 80%;
+    width: 80%;
+}
+
+.o_consumption_chart_widget .pie-chart-container {
+    position: relative;
+    margin: auto;
+    height: 300px;
+    width: 300px;
+}
+
+/* Couleurs pour les différents états */
+.badge-draft {
+    background-color: #17a2b8 !important;
+    color: white !important;
+}
+
+.badge-confirmed {
+    background-color: #ffc107 !important;
+    color: black !important;
+}
+
+.badge-done {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+.badge-cancelled {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+/* Couleurs pour les notes d'efficacité */
+.badge-success {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+.badge-warning {
+    background-color: #ffc107 !important;
+    color: black !important;
+}
+
+.badge-danger {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+.o_field_widget.o_field_selection_badge .badge.badge-a,
+.o_field_widget.o_field_selection_badge .badge.badge-b {
+    background-color: #28a745 !important; /* Vert pour 'A' et 'B' */
+    color: white !important;
+}
+
+.o_field_widget.o_field_selection_badge .badge.badge-c,
+.o_field_widget.o_field_selection_badge .badge.badge-d {
+    background-color: #ffc107 !important; /* Jaune pour 'C' et 'D' */
+    color: black !important;
+}
+
+.o_field_widget.o_field_selection_badge .badge.badge-e,
+.o_field_widget.o_field_selection_badge .badge.badge-f {
+    background-color: #dc3545 !important; /* Rouge pour 'E' et 'F' */
+    color: white !important;
+}

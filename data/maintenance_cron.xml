@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_archive_old_evaluations" model="ir.cron">
+            <field name="name">Archive des anciennes évaluations d'efficacité énergétique</field>
+            <field name="model_id" ref="model_maintenance_efficacite_energetique"/>
+            <field name="state">code</field>
+            <field name="code">
+if model._name in env:
+    model.archive_old_evaluations()
+            </field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_check_expiring_contracts" model="ir.cron">
+            <field name="name">Vérification des contrats de maintenance expirants</field>
+            <field name="model_id" ref="model_maintenance_contract"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_expiring_contracts()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_check_maintenance_team_availability" model="ir.cron">
+            <field name="name">Vérification de la disponibilité des équipes de maintenance</field>
+            <field name="model_id" ref="model_maintenance_team"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_team_availability()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_update_team_occupation_rate" model="ir.cron">
+            <field name="name">Mise à jour du taux d'occupation des équipes de maintenance</field>
+            <field name="model_id" ref="model_maintenance_team"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update_occupation_rate()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_recompute_stock_alerts" model="ir.cron">
+            <field name="name">Recalcul des alertes de stock pour les pièces de maintenance</field>
+            <field name="model_id" ref="model_maintenance_parts_used"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_recompute_stock_alerts()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_update_forecast_demand" model="ir.cron">
+            <field name="name">Mise à jour des prévisions de demande pour les pièces de maintenance</field>
+            <field name="model_id" ref="model_maintenance_parts_used"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update_forecast_demand()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Nouveau cron pour maintenance_request -->
+        <record id="ir_cron_archive_old_requests" model="ir.cron">
+            <field name="name">Archivage des anciennes demandes de maintenance</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_archive_old_requests()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_send_weekly_report" model="ir.cron">
+            <field name="name">Envoi du rapport hebdomadaire de maintenance</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_weekly_report()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_notify_late_requests" model="ir.cron">
+            <field name="name">Notification des demandes de maintenance en retard</field>
+            <field name="model_id" ref="model_maintenance_request"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_notify_late_requests()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+		
+		<record id="ir_cron_update_mtbf" model="ir.cron">
+    <field name="name">Mise à jour du MTBF des équipements</field>
+    <field name="model_id" ref="model_maintenance_request"/>
+    <field name="state">code</field>
+    <field name="code">model._cron_update_mtbf()</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field name="doall" eval="False"/>
+    <field name="active" eval="True"/>
+</record>
+		
+		
+    </data>
+</odoo>

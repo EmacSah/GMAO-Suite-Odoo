@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Vue graphique personnalisée pour les demandes de maintenance -->
+        <record id="view_maintenance_request_graph" model="ir.ui.view">
+            <field name="name">maintenance.request.graph</field>
+            <field name="model">maintenance.request</field>
+            <field name="arch" type="xml">
+                <graph string="Analyse des demandes de maintenance" type="graph" js_class="maintenance_request_graph">
+                    <!-- Champs disponibles pour le graphique -->
+                    <field name="state"/>
+                    <field name="maintenance_type"/>
+                    <field name="system"/>
+                    <field name="duration" type="measure"/>
+                    <field name="total_cost" type="measure"/>
+                    <field name="downtime" type="measure"/>
+                    <field name="mttr" type="measure"/>
+                    <field name="mtbf" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Template QWeb pour le renderer personnalisé -->
+        <template id="maintenance_request_graph_template" inherit_id="web.GraphRenderer">
+            <xpath expr="//div[@class='o_graph']" position="replace">
+                <div class="o_maintenance_request_graph">
+                    <!-- Zone de contrôles -->
+                    <div class="graph_controls">
+                        <!-- Boutons et sélecteurs personnalisés -->
+                        <button class="btn btn-secondary o_graph_export_png">
+                            <i class="fa fa-file-image-o"></i> Export PNG
+                        </button>
+                        <button class="btn btn-secondary o_graph_export">
+                            <i class="fa fa-file-excel-o"></i> Export CSV
+                        </button>
+                        <button class="btn btn-secondary o_graph_zoom_in">
+                            <i class="fa fa-search-plus"></i> Zoom In
+                        </button>
+                        <button class="btn btn-secondary o_graph_zoom_out">
+                            <i class="fa fa-search-minus"></i> Zoom Out
+                        </button>
+                        <select class="o_chart_type_selector">
+                            <option value="bar">Bar Chart</option>
+                            <option value="line">Line Chart</option>
+                            <option value="pie">Pie Chart</option>
+                        </select>
+                    </div>
+                    <!-- Zone du graphique -->
+                    <div class="graph_area">
+                        <!-- Le graphique sera rendu ici par le JavaScript -->
+                    </div>
+                    <!-- Zone du tableau paginé -->
+                    <div class="maintenance-data-table-container">
+                        <!-- Le tableau paginé sera rendu ici par le JavaScript -->
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <!-- Action pour afficher la vue graphique personnalisée -->
+        <record id="action_maintenance_request_graph" model="ir.actions.act_window">
+            <field name="name">Graphique des demandes de maintenance</field>
+            <field name="res_model">maintenance.request</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_maintenance_request_graph"/>
+            <field name="context">{}</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Définition du rapport pour les demandes de maintenance -->
+        <record id="action_report_maintenance_request" model="ir.actions.report">
+            <!-- Nom du rapport tel qu'il apparaît dans l'interface -->
+            <field name="name">Rapport de demande de maintenance</field>
+            <!-- Modèle sur lequel le rapport est basé -->
+            <field name="model">maintenance.request</field>
+            <!-- Type de rapport (ici, PDF généré par QWeb) -->
+            <field name="report_type">qweb-pdf</field>
+            <!-- Nom du template QWeb à utiliser -->
+            <field name="report_name">gmao_suite.report_maintenance_request_template</field>
+            <!-- Nom du fichier généré -->
+            <field name="report_file">gmao_suite.report_maintenance_request</field>
+            <!-- Nom du fichier PDF généré -->
+            <field name="print_report_name">'Demande de maintenance - %s' % (object.name)</field>
+            <!-- Lier le rapport au modèle maintenance.request -->
+            <field name="binding_model_id" ref="model_maintenance_request"/>
+            <!-- Type de liaison (rapport) -->
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Template QWeb pour le contenu du rapport -->
+        <template id="report_maintenance_request_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Demande de maintenance <span t-field="o.name"/></h2>
+                            
+                            <!-- Informations générales -->
+                            <div class="row mt32 mb32">
+                                <div class="col-3">
+                                    <strong>Date de demande:</strong>
+                                    <p t-field="o.request_date"/>
+                                </div>
+                                <div class="col-3">
+                                    <strong>État:</strong>
+                                    <p t-field="o.state"/>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Priorité:</strong>
+                                    <p t-field="o.priority"/>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Type:</strong>
+                                    <p t-field="o.maintenance_type"/>
+                                </div>
+                            </div>
+
+                            <!-- Équipement et localisation -->
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>Équipement:</strong>
+                                    <p t-field="o.equipment_id.name"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Site:</strong>
+                                    <p t-field="o.site_id.name"/>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="row mt32 mb32">
+                                <div class="col-12">
+                                    <strong>Description:</strong>
+                                    <p t-field="o.description"/>
+                                </div>
+                            </div>
+
+                            <!-- Pièces utilisées -->
+                            <h3>Pièces utilisées</h3>
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Quantité</th>
+                                        <th>Prix unitaire</th>
+                                        <th>Prix total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.parts_used_ids" t-as="part">
+                                        <td><span t-field="part.product_id.name"/></td>
+                                        <td><span t-field="part.quantity"/></td>
+                                        <td><span t-field="part.unit_price"/></td>
+                                        <td><span t-field="part.total_price"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Informations de coût -->
+                            <div class="row mt32 mb32">
+                                <div class="col-4">
+                                    <strong>Coût total des pièces:</strong>
+                                    <p t-field="o.total_parts_cost"/>
+                                </div>
+                                <div class="col-4">
+                                    <strong>Coût de main d'œuvre:</strong>
+                                    <p t-field="o.labor_cost"/>
+                                </div>
+                                <div class="col-4">
+                                    <strong>Coût total:</strong>
+                                    <p t-field="o.total_cost"/>
+                                </div>
+                            </div>
+
+                            <!-- Observations -->
+                            <div class="row mt32 mb32">
+                                <div class="col-12">
+                                    <strong>Observations:</strong>
+                                    <p t-field="o.observations"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

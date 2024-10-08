@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <templates id="template" xml:space="preserve">
+        <!-- Template pour le renderer personnalisé -->
+        <t t-name="MaintenanceRequestGraphRenderer">
+            <!-- Conteneur principal -->
+            <div class="o_maintenance_request_graph">
+                <!-- Zone de contrôles -->
+                <div class="graph_controls">
+                    <!-- Boutons et sélecteurs personnalisés -->
+                    <button class="btn btn-secondary o_graph_export_png">
+                        <i class="fa fa-file-image-o"></i> Export PNG
+                    </button>
+                    <button class="btn btn-secondary o_graph_export">
+                        <i class="fa fa-file-excel-o"></i> Export CSV
+                    </button>
+                    <button class="btn btn-secondary o_graph_zoom_in">
+                        <i class="fa fa-search-plus"></i> Zoom In
+                    </button>
+                    <button class="btn btn-secondary o_graph_zoom_out">
+                        <i class="fa fa-search-minus"></i> Zoom Out
+                    </button>
+                    <!-- Sélecteur du type de graphique -->
+                    <select class="o_chart_type_selector">
+                        <option value="bar">Bar Chart</option>
+                        <option value="line">Line Chart</option>
+                        <option value="pie">Pie Chart</option>
+                    </select>
+                    <!-- Sélecteurs pour les axes X et Y -->
+                    <select class="o_graph_x_axis">
+                        <option value="">Select X-Axis</option>
+                        <t t-foreach="availableDimensions" t-as="field">
+                            <option t-att-value="field" t-esc="fieldLabels[field]"/>
+                        </t>
+                    </select>
+                    <select class="o_graph_y_axis">
+                        <option value="">Select Y-Axis</option>
+                        <t t-foreach="availableMeasures" t-as="field">
+                            <option t-att-value="field" t-esc="fieldLabels[field]"/>
+                        </t>
+                    </select>
+                </div>
+                <!-- Zone du graphique -->
+                <div class="graph_area">
+                    <!-- Le graphique sera rendu ici par le JavaScript -->
+                </div>
+                <!-- Légende -->
+                <div class="o_graph_legend">
+                    <!-- La légende sera générée par le JavaScript -->
+                </div>
+                <!-- Zone du tableau paginé -->
+                <div class="maintenance-data-table-container">
+                    <!-- Le tableau paginé sera rendu ici par le JavaScript -->
+                </div>
+                <!-- Pagination -->
+                <div class="o_graph_pagination">
+                    <button class="btn btn-secondary o_graph_prev_page">
+                        <i class="fa fa-chevron-left"></i> Previous
+                    </button>
+                    <button class="btn btn-secondary o_graph_next_page">
+                        Next <i class="fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </t>
+    </templates>
+</odoo>

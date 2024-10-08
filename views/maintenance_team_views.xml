@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire pour les équipes de maintenance -->
+    <record id="view_maintenance_team_form" model="ir.ui.view">
+        <field name="name">maintenance.team.form</field>
+        <field name="model">maintenance.team</field>
+        <field name="arch" type="xml">
+            <form string="Équipe de Maintenance">
+                <header>
+				    <!-- ... autres boutons ... -->
+                    <button name="%(gmao_suite.action_report_maintenance_team)d" string="Imprimer rapport" type="action" class="oe_highlight" groups="gmao_suite.group_maintenance_team_user,gmao_suite.group_maintenance_team_admin"/>
+                    <button name="%(gmao_suite.action_report_maintenance_team_planning)d" string="Imprimer planning" type="action" class="oe_highlight" groups="gmao_suite.group_maintenance_team_user,gmao_suite.group_maintenance_team_admin"/>
+                    <button name="action_validate_team" string="Valider" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validated"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                        <button name="action_view_last_month" string="Dernier mois" type="object" class="oe_stat_button" icon="fa-calendar"/>
+                        <button name="action_view_last_year" string="Dernière année" type="object" class="oe_stat_button" icon="fa-calendar"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom de l'équipe" attrs="{'readonly': [('id', '!=', False)]}" groups="gmao_suite.group_maintenance_team_user,gmao_suite.group_maintenance_team_admin"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="leader_id" attrs="{'readonly': [('id', '!=', False)]}" groups="gmao_suite.group_maintenance_team_user,gmao_suite.group_maintenance_team_admin"/>
+                            <field name="total_members" attrs="{'readonly': [('id', '!=', False)]}" groups="gmao_suite.group_maintenance_team_user,gmao_suite.group_maintenance_team_admin"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group>
+                            <field name="open_requests_count"/>
+                            <field name="success_rate" widget="percentage"/>
+                            <field name="workload"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Membres de l'équipe">
+                            <field name="member_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue liste pour les équipes de maintenance -->
+    <record id="view_maintenance_team_tree" model="ir.ui.view">
+        <field name="name">maintenance.team.tree</field>
+        <field name="model">maintenance.team</field>
+        <field name="arch" type="xml">
+            <tree string="Équipes de Maintenance" decoration-muted="not active">
+                <field name="name" attrs="{'readonly': [('id', '!=', False)]}" groups="gmao_suite.group_maintenance_team_user,gmao_suite.group_maintenance_team_admin"/>
+                <field name="leader_id" attrs="{'readonly': [('id', '!=', False)]}" groups="gmao_suite.group_maintenance_team_user,gmao_suite.group_maintenance_team_admin"/>
+                <field name="total_members" attrs="{'readonly': [('id', '!=', False)]}" groups="gmao_suite.group_maintenance_team_user,gmao_suite.group_maintenance_team_admin"/>
+                <field name="open_requests_count"/>
+                <field name="success_rate" widget="percentage"/>
+                <field name="workload"/>
+                <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue kanban pour les équipes de maintenance -->
+    <record id="view_maintenance_team_kanban" model="ir.ui.view">
+        <field name="name">maintenance.team.kanban</field>
+        <field name="model">maintenance.team</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" on_create="quick_create">
+                <field name="name"/>
+                <field name="leader_id"/>
+                <field name="total_members"/>
+                <field name="open_requests_count"/>
+                <field name="success_rate"/>
+                <field name="workload"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top mb16">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    </div>
+                                    <strong><field name="leader_id"/></strong>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="total_members"/> membres<br/>
+                                    <field name="open_requests_count"/> demandes ouvertes<br/>
+                                    Taux de réussite: <field name="success_rate" widget="percentage"/><br/>
+                                    Charge de travail: <field name="workload"/>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vue de recherche pour les équipes de maintenance -->
+<record id="view_maintenance_team_search" model="ir.ui.view">
+    <field name="name">maintenance.team.search</field>
+    <field name="model">maintenance.team</field>
+    <field name="arch" type="xml">
+        <search string="Recherche Équipes de Maintenance">
+            <field name="name"/>
+            <field name="leader_id"/>
+            <field name="member_ids"/>
+            <filter string="Archivé" name="inactive" domain="[('active', '=', False)]"/>
+            <separator/>
+            <filter string="Taux de réussite &gt; 80%" name="high_success_rate" domain="[('success_rate', '&gt;', 80)]"/>
+            <filter string="Taux de réussite &lt; 50%" name="low_success_rate" domain="[('success_rate', '&lt;', 50)]"/>
+            <separator/>
+            <filter string="Ma société" name="my_company" domain="[('company_id', '=', allowed_company_ids[0])]"/>
+            <group expand="0" string="Group By">
+                <filter string="Chef d'équipe" name="group_by_leader" context="{'group_by': 'leader_id'}"/>
+                <filter string="État" name="group_by_state" context="{'group_by': 'state'}"/>
+                <filter string="Société" name="group_by_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+
+    <!-- Vue graphique pour les équipes de maintenance -->
+    <record id="view_maintenance_team_graph" model="ir.ui.view">
+        <field name="name">maintenance.team.graph</field>
+        <field name="model">maintenance.team</field>
+        <field name="arch" type="xml">
+            <graph string="Performance des équipes de maintenance" type="bar">
+                <field name="name"/>
+                <field name="success_rate" type="measure"/>
+                <field name="workload" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Vue pivot pour les équipes de maintenance -->
+    <record id="view_maintenance_team_pivot" model="ir.ui.view">
+        <field name="name">maintenance.team.pivot</field>
+        <field name="model">maintenance.team</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse des équipes de maintenance">
+                <field name="name" type="row"/>
+                <field name="success_rate" type="measure"/>
+                <field name="workload" type="measure"/>
+                <field name="open_requests_count" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action pour la vue des équipes de maintenance -->
+    <record id="action_maintenance_team" model="ir.actions.act_window">
+        <field name="name">Équipes de Maintenance</field>
+        <field name="res_model">maintenance.team</field>
+        <field name="view_mode">kanban,tree,form,graph,pivot</field>
+        <field name="search_view_id" ref="view_maintenance_team_search"/>
+        <field name="context">{'search_default_my_company': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer la première équipe de maintenance
+            </p>
+        </field>
+    </record>
+	
+	<!-- Actions pour chaque modèle -->
+        <record id="action_maintenance_team_groups" model="ir.actions.act_window">
+			<field name="name">Droits d'accès Équipes</field>
+			<field name="res_model">res.groups</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain" eval="[('category_id', '=', ref('gmao_suite.module_category_maintenance')), ('name', 'ilike', 'Équipe de maintenance')]"/>
+		</record>
+
+</odoo>
